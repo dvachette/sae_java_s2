@@ -1,7 +1,7 @@
 package iut.g3s2e2;
-
+import iut.g3s2e2.demo.DemoSwing;
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
+        DemoSwing.run("textField");
     }
 }
