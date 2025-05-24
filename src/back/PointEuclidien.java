@@ -8,7 +8,7 @@ package back;
  *
  * @author donat
  */
-public class PointEuclidien {
+public class PointEuclidien implements Point {
     private double x, y;
     private int id;
 
@@ -18,8 +18,13 @@ public class PointEuclidien {
         this.id = id;
     }
     
-    public double distanceOf(PointEuclidien p) {
-        return Math.sqrt(Math.pow(this.x - p.getX(), 2) + Math.pow(this.y - p.getY(), 2));
+    @Override
+    public double distanceOf(Point p) {
+        if (!(p instanceof PointEuclidien)) {
+            return -1;
+        }
+        PointEuclidien pe = (PointEuclidien) p;
+        return Math.sqrt(Math.pow(this.x - pe.getX(), 2) + Math.pow(this.y - pe.getY(), 2));
     }
 
     public double getX() {
