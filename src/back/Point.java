@@ -10,4 +10,5 @@ package back;
  */
 public interface Point {
     double distanceOf(Point p);
+    int getId();
 }
