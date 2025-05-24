@@ -10,21 +10,18 @@ package back;
  */
 public class PointEuclidien {
     private double x, y;
-    
-    public PointEuclidien(double x, double y) {
+    private int id;
+
+    public PointEuclidien(double x, double y, int id) {
         this.x = x;
         this.y = y;
-    }
-    
-    public PointEuclidien() {
-        this.x = 0;
-        this.y = 0;
+        this.id = id;
     }
     
     public double distanceOf(PointEuclidien p) {
         return Math.sqrt(Math.pow(this.x - p.getX(), 2) + Math.pow(this.y - p.getY(), 2));
     }
-        
+
     public double getX() {
         return x;
     }
@@ -40,7 +37,15 @@ public class PointEuclidien {
     public void setY(double y) {
         this.y = y;
     }
+    
+    public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    
     @Override
     public String toString() {
         return "PointEuclidien{" + "x=" + x + ", y=" + y + '}';
