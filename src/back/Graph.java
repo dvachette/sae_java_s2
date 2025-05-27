@@ -12,6 +12,9 @@ import java.util.TreeMap;
  *
  * @author donat
  * @param <T>
+ * 
+ * @brief Classe représentant un graphe
+ * 
  */
 public class Graph<T extends Point> {
 
