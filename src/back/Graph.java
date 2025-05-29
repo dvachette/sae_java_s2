@@ -17,21 +17,44 @@ import java.util.TreeMap;
  * 
  */
 public class Graph<T extends Point> {
-
     private TreeMap<Integer, T> points;
 
+    /**
+     * @author donat
+     * 
+     * @brief Constructeur de base, génère un graphe vide
+     */
     public Graph() {
         this.points = new TreeMap<>();
     }
 
+    
+    /**
+     * @author donat
+     * 
+     * @return Renvoie la map des points, indexés par leurs ID
+     */
     public TreeMap<Integer, T> getPoints() {
         return points;
     }
 
+    /**
+     * @author donat
+     * 
+     * @param points Map de points à passer
+     * 
+     * @warning À utiliser avec précautions
+     */
     public void setPoints(TreeMap<Integer, T> points) {
         this.points = points;
     }
 
+    /**
+     * @author donat
+     * 
+     * @param id L'ID du point désiré
+     * @return Point (T)
+     */
     public T getPoint(int id) {
         return points.get(id);
     }

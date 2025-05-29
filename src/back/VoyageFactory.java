@@ -67,7 +67,7 @@ public class VoyageFactory {
                 voyage.Display_Type = displayType;
                 voyage.EDGE_WEIGHT_FORMAT = edgeWeightFormat;
                 // Initialize the graph for Euclidean points
-                voyage.graph = new Graph<PointEuclidien>();
+                voyage.graph = new Graph<PointEuclidien>(); // TODO Already initialized in the constructor
                 // Read the NODE_COORD_SECTION
 
                 if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
@@ -94,7 +94,7 @@ public class VoyageFactory {
                 voyage.Type_Coordinate = typeCoordinate;
                 voyage.Display_Type = displayType;
                 voyage.EDGE_WEIGHT_FORMAT = edgeWeightFormat;
-                voyage.graph = new Graph<PointGeographique>();
+                voyage.graph = new Graph<PointGeographique>(); // TODO : Already initialized in the constructor
 
                 if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
                 scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
@@ -117,11 +117,11 @@ public class VoyageFactory {
             } else {
                 scanner.close();
                 fileInputStream.close();
-                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate);
+                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); //TODO : We are expected to handle errors
             }
         }
         catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // TODO : better error handling
         }
         return null; 
     }
