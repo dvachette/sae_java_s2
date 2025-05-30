@@ -5,6 +5,7 @@
 package back;
 
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.TreeMap;
 
 /**
@@ -12,30 +13,40 @@ import java.util.TreeMap;
  * @author donat
  */
 public class Parcours {
-    private float length;
+
+    private double length;
     private ArrayList<Point> path;
 
-    public Parcours(float length, ArrayList<Point> path) {
+    public Parcours(double length, ArrayList<Point> path) {
         this.length = length;
         this.path = path;
     }
-    
+
     public static Parcours parcoursGlouton(Graph g) {
         return null;
     }
-    
+
     public static Parcours parcoursAleatoire(Graph g) {
         TreeMap<Integer, Point> points = g.getPoints();
-        
+        ArrayList<Point> pool = new ArrayList<>(points.values());
+        Random rng = new Random();
+        ArrayList<Point> path = new ArrayList<>();
+        int size = pool.size();
+        for (int i = size; i > 0; i++) {
+            path.add(pool.get(rng.nextInt(0, i)));
+        }
+        double length = path.getLast().distanceOf(path.getFirst());
+        for (int i = 0; i < size - 1; i++) {
+            length += path.get(i).distanceOf(path.get(i + 1));
+        }
+        return new Parcours(length, path);
     }
-    
+
     public static Parcours parcoursInsertion(Graph g) {
         return null;
     }
-    
-    
 
-    public float getLength() {
+    public double getLength() {
         return length;
     }
 
@@ -47,6 +58,5 @@ public class Parcours {
     public String toString() {
         return "Parcours{" + "length=" + length + ", path=" + path + '}';
     }
-    
-    
+
 }
