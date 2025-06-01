@@ -4,11 +4,11 @@ package back;
  * @author Ethan
  */
 
-public class Voyage_Geo extends Voyage {
+public class VoyageGeo extends Voyage {
 
     public Graph<PointGeographique> graph;
 
-    public Voyage_Geo() {
+    public VoyageGeo() {
         super();
         this.graph = new Graph<>();
     }

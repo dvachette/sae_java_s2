@@ -58,7 +58,7 @@ public class VoyageFactory {
            
 
             if (typeCoordinate.equals("EUC_2D")) {
-                Voyage_Eucli voyage = new Voyage_Eucli();
+                VoyageEucli voyage = new VoyageEucli();
                 voyage.name = name;
                 voyage.type = type;
                 voyage.comment = comment;
@@ -86,7 +86,7 @@ public class VoyageFactory {
                 fileInputStream.close();
                 return voyage;
             } else if (typeCoordinate.equals("GEO")) {
-                Voyage_Geo voyage = new Voyage_Geo();
+                VoyageGeo voyage = new VoyageGeo();
                 voyage.name = name;
                 voyage.type = type;
                 voyage.comment = comment;

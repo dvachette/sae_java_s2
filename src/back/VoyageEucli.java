@@ -4,11 +4,11 @@ package back;
  * @author Ethan
  */
 
-public class Voyage_Eucli extends Voyage {
+public class VoyageEucli extends Voyage {
 
     public Graph<PointEuclidien> graph;
 
-    public Voyage_Eucli() {
+    public VoyageEucli() {
         super();
         this.graph = new Graph<>();
     }

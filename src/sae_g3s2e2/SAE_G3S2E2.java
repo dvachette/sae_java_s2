@@ -20,12 +20,12 @@ public class SAE_G3S2E2 {
         //test voyage
         VoyageFactory voyageFactory = new VoyageFactory("sae_java_s2\\User_File\\test8.txt");
         Voyage voyage = voyageFactory.createVoyage();
-        if (voyage instanceof Voyage_Eucli) {
-            Voyage_Eucli voyageEucli = (Voyage_Eucli) voyage;
+        if (voyage instanceof VoyageEucli) {
+            VoyageEucli voyageEucli = (VoyageEucli) voyage;
             System.out.println("Voyage Euclidien: " + voyageEucli.getName());
             System.out.println("Graph: " + voyageEucli.getGraph());
-        } else if (voyage instanceof Voyage_Geo) {
-            Voyage_Geo voyageGeo = (Voyage_Geo) voyage;
+        } else if (voyage instanceof VoyageGeo) {
+            VoyageGeo voyageGeo = (VoyageGeo) voyage;
             System.out.println("Voyage Geographique: " + voyageGeo.getName());
             System.out.println("Graph: " + voyageGeo.getGraph());
         } else {
