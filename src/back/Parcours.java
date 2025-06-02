@@ -25,7 +25,11 @@ public class Parcours {
     public static Parcours parcoursGlouton(Graph g) {
         return null;
     }
-
+    /**
+     * @author donat
+     * @param g
+     * @return 
+     */
     public static Parcours parcoursAleatoire(Graph g) {
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
