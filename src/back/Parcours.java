@@ -23,7 +23,31 @@ public class Parcours {
     }
 
     public static Parcours parcoursGlouton(Graph g) {
-        return null;
+        TreeMap<Integer, Point> points = g.getPoints();
+        ArrayList<Point> pool = new ArrayList<>(points.values());
+        ArrayList<Point> path = new ArrayList<>();
+        Random rng = new Random();
+        Point current = pool.remove(rng.nextInt(pool.size()));
+        path.add(current);
+        double length = 0;
+
+        while (!pool.isEmpty()) {
+            double minDistance = Double.MAX_VALUE;
+            Point nextPoint = null;
+            for (Point p : pool) {
+                double distance = current.distanceOf(p);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nextPoint = p;
+                }
+            }
+            length += minDistance;
+            path.add(nextPoint);
+            pool.remove(nextPoint);
+            current = nextPoint;
+        }
+        length += current.distanceOf(path.get(0)); // Return to start
+        return new Parcours(length, path);
     }
     /**
      * @author donat
