@@ -8,7 +8,7 @@ import java.io.FileInputStream;
 import java.util.Scanner;
 
 public class VoyageFactory {
-    String chemin;
+    private String chemin;
 
     public VoyageFactory(String chemin) {
         this.chemin = chemin;
@@ -59,13 +59,13 @@ public class VoyageFactory {
 
             if (typeCoordinate.equals("EUC_2D")) {
                 VoyageEucli voyage = new VoyageEucli();
-                voyage.name = name;
-                voyage.type = type;
-                voyage.comment = comment;
-                voyage.dimension = dimension;
-                voyage.Type_Coordinate = typeCoordinate;
-                voyage.Display_Type = displayType;
-                voyage.EDGE_WEIGHT_FORMAT = edgeWeightFormat;
+                voyage.setName(name);
+                voyage.setType(type);
+                voyage.setComment(comment);
+                voyage.setDimension(dimension);
+                voyage.setTypeCoordinate(typeCoordinate);
+                voyage.setDisplayType(displayType);
+                voyage.setEdgeWeightFormat(edgeWeightFormat);
                 // Initialize the graph for Euclidean points
                 voyage.graph = new Graph<PointEuclidien>(); // TODO Already initialized in the constructor
                 // Read the NODE_COORD_SECTION
@@ -87,13 +87,13 @@ public class VoyageFactory {
                 return voyage;
             } else if (typeCoordinate.equals("GEO")) {
                 VoyageGeo voyage = new VoyageGeo();
-                voyage.name = name;
-                voyage.type = type;
-                voyage.comment = comment;
-                voyage.dimension = dimension;
-                voyage.Type_Coordinate = typeCoordinate;
-                voyage.Display_Type = displayType;
-                voyage.EDGE_WEIGHT_FORMAT = edgeWeightFormat;
+                voyage.setName(name);
+                voyage.setType(type);
+                voyage.setComment(comment);
+                voyage.setDimension(dimension);
+                voyage.setTypeCoordinate(typeCoordinate);
+                voyage.setDisplayType(displayType);
+                voyage.setEdgeWeightFormat(edgeWeightFormat);
                 voyage.graph = new Graph<PointGeographique>(); // TODO : Already initialized in the constructor
 
                 if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {

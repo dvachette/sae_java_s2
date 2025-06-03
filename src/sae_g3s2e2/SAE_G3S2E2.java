@@ -1,6 +1,7 @@
 package sae_g3s2e2;
 
 import back.*;
+import java.util.ArrayList;
 
 /**
  *
@@ -16,7 +17,17 @@ public class SAE_G3S2E2 {
         System.out.println(graph.getPoint(2));
         System.out.println(graph.getPoint(4));
         System.out.println(graph.getDistances(2));
-
+        // Test plus proche point
+        
+        PointEuclidien pe1 = new PointEuclidien(0, 0, 0);
+        PointEuclidien pe2 = new PointEuclidien(2, 1, 1);
+        PointEuclidien pe3 = new PointEuclidien(3, 0, 2);
+        
+        ArrayList<Point> points = new ArrayList<>();
+        points.add(pe3);
+        points.add(pe2);
+        System.out.println(pe1.closest(points));
+        
         //test voyage
         VoyageFactory voyageFactory = new VoyageFactory("sae_java_s2\\User_File\\test8.txt");
         Voyage voyage = voyageFactory.createVoyage();

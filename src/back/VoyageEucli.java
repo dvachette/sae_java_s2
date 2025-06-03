@@ -17,7 +17,4 @@ public class VoyageEucli extends Voyage {
     public Graph<PointEuclidien> getGraph() {
         return graph;
     }
-    public String getName() {
-        return name;
-    }
 }

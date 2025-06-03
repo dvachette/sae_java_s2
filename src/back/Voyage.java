@@ -6,13 +6,13 @@ package back;
  */
 
 public class Voyage {
-    String name;
-    String type;
-    String comment;
-    int dimension;
-    String Type_Coordinate;
-    String Display_Type;
-    String EDGE_WEIGHT_FORMAT;
+    protected String name;
+    protected String type;
+    protected String comment;
+    protected int dimension;
+    protected String typeCoordinate;
+    protected String displayType;
+    protected String edgeWeightFormat;
 
 
     public Voyage(){
@@ -20,8 +20,80 @@ public class Voyage {
         this.type = "";
         this.comment = "";
         this.dimension = 0;
-        this.Type_Coordinate = "";
-        this.Display_Type = "";
-        this.EDGE_WEIGHT_FORMAT = "";
+        this.typeCoordinate = "";
+        this.displayType = "";
+        this.edgeWeightFormat = "";
     }
+
+    public Voyage(String name, String type, String comment, int dimension, String typeCoordinate, String displayType, String edgeWeightFormat) {
+        this.name = name;
+        this.type = type;
+        this.comment = comment;
+        this.dimension = dimension;
+        this.typeCoordinate = typeCoordinate;
+        this.displayType = displayType;
+        this.edgeWeightFormat = edgeWeightFormat;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public int getDimension() {
+        return dimension;
+    }
+
+    public void setDimension(int dimension) {
+        this.dimension = dimension;
+    }
+
+    public String getTypeCoordinate() {
+        return typeCoordinate;
+    }
+
+    public void setTypeCoordinate(String typeCoordinate) {
+        this.typeCoordinate = typeCoordinate;
+    }
+
+    public String getDisplayType() {
+        return displayType;
+    }
+
+    public void setDisplayType(String displayType) {
+        this.displayType = displayType;
+    }
+
+    public String getEdgeWeightFormat() {
+        return edgeWeightFormat;
+    }
+
+    public void setEdgeWeightFormat(String edgeWeightFormat) {
+        this.edgeWeightFormat = edgeWeightFormat;
+    }
+
+    @Override
+    public String toString() {
+        return "Voyage{" + "name=" + name + ", type=" + type + ", comment=" + comment + ", dimension=" + dimension + ", typeCoordinate=" + typeCoordinate + ", displayType=" + displayType + ", edgeWeightFormat=" + edgeWeightFormat + '}';
+    }
+    
 }
