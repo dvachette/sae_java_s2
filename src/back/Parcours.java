@@ -63,7 +63,40 @@ public class Parcours {
     }
 
     public static Parcours parcoursInsertion(Graph g) {
-        return null;
+        TreeMap<Integer, Point> points = g.getPoints();
+        ArrayList<Point> pool = new ArrayList<>(points.values());
+        ArrayList<Point> path = new ArrayList<>();
+        Random rng = new Random();
+        Point current = pool.remove(rng.nextInt(pool.size()));
+        path.add(current);
+        double length = 0;
+
+        while (!pool.isEmpty()) {
+            double minDistance = Double.MAX_VALUE;
+            Point nextPoint = null;
+            int insertIndex = -1;
+
+            for (int i = 0; i < path.size(); i++) {
+                Point p1 = path.get(i);
+                Point p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
+                for (Point candidate : pool) {
+                    double distance = p1.distanceOf(candidate) + candidate.distanceOf(p2) - p1.distanceOf(p2);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nextPoint = candidate;
+                        insertIndex = i + 1;
+                    }
+                }
+            }
+
+            if (nextPoint != null) {
+                length += minDistance;
+                path.add(insertIndex, nextPoint);
+                pool.remove(nextPoint);
+            }
+        }
+        length += path.getLast().distanceOf(path.getFirst()); // Return to start
+        return new Parcours(length, path);
     }
 
     public double getLength() {
