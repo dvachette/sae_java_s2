@@ -24,4 +24,27 @@ public class Voyage {
         this.Display_Type = "";
         this.EDGE_WEIGHT_FORMAT = "";
     }
+
+     public String getName() { 
+        return name;
+    }
+    public String getType() {
+        return type;
+    }
+    public String getComment() {
+        return comment;
+    }
+    public int getDimension() {
+        return dimension;
+    }
+    public String getType_Coordinate() {
+        return Type_Coordinate;
+    }
+    public String getDisplay_Type() {
+        return Display_Type;
+    }
+    public String getEDGE_WEIGHT_FORMAT() {
+        return EDGE_WEIGHT_FORMAT;
+    }
 }
+

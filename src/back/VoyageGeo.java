@@ -17,7 +17,4 @@ public class VoyageGeo extends Voyage {
     public Graph<PointGeographique> getGraph() {
         return graph;
     }
-    public String getName() { // TODO  : mettre la methode dans la superclasse Voyage
-        return name;
-    }
 }
