@@ -4,6 +4,8 @@
  */
 package back;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author donat
@@ -11,4 +13,5 @@ package back;
 public interface Point {
     double distanceOf(Point p);
     int getId();
+    Point closest(ArrayList<Point> points);
 }

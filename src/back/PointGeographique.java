@@ -4,6 +4,8 @@
  */
 package back;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author donat
@@ -77,6 +79,22 @@ public class PointGeographique implements Point {
         String[] strVal = val.toString().split("\\.");
         Double valDec = Math.abs(Double.parseDouble(strVal[0])) + (Double.parseDouble(strVal[1]) / 60);
         return Math.PI * valDec/180;
+    }
+    
+        @Override
+    public Point closest(ArrayList<Point> points) {
+        double miniDist = this.distanceOf(points.getFirst());
+        Point closest = points.getFirst();
+        for (Point p : points) {
+            if (!(p instanceof PointGeographique)) {
+                return null;
+            }
+            if (miniDist > this.distanceOf(p)) {
+                miniDist = this.distanceOf(p);
+                closest = p;
+            }
+        }
+        return closest;
     }
     
 }

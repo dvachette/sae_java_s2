@@ -4,6 +4,8 @@
  */
 package back;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author donat
@@ -54,6 +56,22 @@ public class PointEuclidien implements Point {
     @Override
     public String toString() {
         return "PointEuclidien{" + "x=" + x + ", y=" + y + '}';
+    }
+
+    @Override
+    public Point closest(ArrayList<Point> points) {
+        double miniDist = this.distanceOf(points.getFirst());
+        Point closest = points.getFirst();
+        for (Point p : points) {
+            if (!(p instanceof PointEuclidien)) {
+                return null;
+            }
+            if (miniDist > this.distanceOf(p)) {
+                miniDist = this.distanceOf(p);
+                closest = p;
+            }
+        }
+        return closest;
     }
     
     
