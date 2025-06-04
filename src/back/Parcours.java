@@ -22,7 +22,8 @@ public class Parcours {
         this.path = path;
     }
 
-    public static Parcours parcoursGlouton(Graph g) {
+    public static Parcours parcoursGlouton(@SuppressWarnings("rawtypes") Graph g) {
+        @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
         ArrayList<Point> path = new ArrayList<>();
@@ -46,7 +47,8 @@ public class Parcours {
      * @param g
      * @return 
      */
-    public static Parcours parcoursAleatoire(Graph g) {
+    public static Parcours parcoursAleatoire(@SuppressWarnings("rawtypes") Graph g) {
+        @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
         Random rng = new Random();
@@ -62,7 +64,8 @@ public class Parcours {
         return new Parcours(length, path);
     }
 
-    public static Parcours parcoursInsertion(Graph g) {
+    public static Parcours parcoursInsertion(@SuppressWarnings("rawtypes") Graph g) {
+        @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
         ArrayList<Point> path = new ArrayList<>();
