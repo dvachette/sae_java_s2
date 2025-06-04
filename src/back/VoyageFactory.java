@@ -5,7 +5,11 @@ package back;
  */
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
+
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 public class VoyageFactory {
     private String chemin;
@@ -23,41 +27,43 @@ public class VoyageFactory {
         String displayType = "";
         String edgeWeightFormat = "";
 
-        try{
+        try(
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
+        ){
+            
             String line;
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
-                if (line.trim().equals("NODE_COORD_SECTION")) {
+                if (line.trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
                     break;
                 }
                 String[] parts = line.split(":");
-                if ((parts[0].trim()).equals("NAME")) {
+                if ((parts[0].trim()).equalsIgnoreCase("NAME")) {
                     name = parts[1].trim();
                 }
-                else if ((parts[0].trim()).equals("TYPE")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("TYPE")) {
                     type = parts[1].trim();
                 }
-                else if ((parts[0].trim()).equals("COMMENT")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("COMMENT")) {
                     comment = parts[1].trim();
                 }
-                else if ((parts[0].trim()).equals("DIMENSION")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("DIMENSION")) {
                     dimension = Integer.parseInt(parts[1].trim());
                 }
-                else if ((parts[0].trim()).equals("EDGE_WEIGHT_TYPE")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("EDGE_WEIGHT_TYPE")) {
                     typeCoordinate = parts[1].trim();
                 }
-                else if ((parts[0].trim()).equals("DISPLAY_TYPE")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("DISPLAY_TYPE")) {
                     displayType = parts[1].trim();
                 }
-                else if ((parts[0].trim()).equals("EDGE_WEIGHT_FORMAT")) {
+                else if ((parts[0].trim()).equalsIgnoreCase("EDGE_WEIGHT_FORMAT")) {
                     edgeWeightFormat = parts[1].trim();
                 }
             }
            
 
-            if (typeCoordinate.equals("EUC_2D")) {
+            if (typeCoordinate.equalsIgnoreCase("EUC_2D")) {
                 VoyageEucli voyage = new VoyageEucli();
                 voyage.setName(name);
                 voyage.setType(type);
@@ -66,11 +72,10 @@ public class VoyageFactory {
                 voyage.setTypeCoordinate(typeCoordinate);
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
-                // Initialize the graph for Euclidean points
-                voyage.graph = new Graph<PointEuclidien>(); // TODO Already initialized in the constructor
+                
                 // Read the NODE_COORD_SECTION
 
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
+                if (scanner.hasNextLine() && scanner.nextLine().trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
                 scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
                 line = scanner.nextLine();
                 while (line != null && !line.trim().equals("EOF")) {
@@ -85,7 +90,7 @@ public class VoyageFactory {
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
-            } else if (typeCoordinate.equals("GEO")) {
+            } else if (typeCoordinate.equalsIgnoreCase("GEO")) {
                 VoyageGeo voyage = new VoyageGeo();
                 voyage.setName(name);
                 voyage.setType(type);
@@ -94,9 +99,8 @@ public class VoyageFactory {
                 voyage.setTypeCoordinate(typeCoordinate);
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
-                voyage.graph = new Graph<PointGeographique>(); // TODO : Already initialized in the constructor
 
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
+                if (scanner.hasNextLine() && scanner.nextLine().trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
                 scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
                 line = scanner.nextLine();
                 while (line != null && !line.trim().equals("EOF")) {
@@ -108,20 +112,81 @@ public class VoyageFactory {
                     voyage.graph.addPoint(point);
                 }
             }
-
-
-
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
             } else {
                 scanner.close();
                 fileInputStream.close();
-                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); //TODO : We are expected to handle errors
+                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); 
             }
         }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Le type de coordonnées n'est pas supporté.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+
+        catch(IndexOutOfBoundsException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Le fichier est mal formé ou incomplet.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+        
+
+        catch(FileNotFoundException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Le fichier n'a pas été trouvé.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+
+        catch(NullPointerException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Le fichier est vide ou mal formé.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+
+
+
         catch (Exception e) {
-            e.printStackTrace(); // TODO : better error handling
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de la création du voyage.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
         }
         return null; 
     }

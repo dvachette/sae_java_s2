@@ -13,6 +13,8 @@ public class SAE_G3S2E2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
+        String filePath = "sae_java_s2/User_File/test.txt";
+        // Test lecture de fichier
         Graph<PointEuclidien> graph = Graph.randomPointSet(10);
         System.out.println(graph.getPoint(2));
         System.out.println(graph.getPoint(4));
@@ -29,7 +31,7 @@ public class SAE_G3S2E2 {
         System.out.println(pe1.closest(points));
         
         //test voyage
-        VoyageFactory voyageFactory = new VoyageFactory("sae_java_s2/User_File/test8.txt");
+        VoyageFactory voyageFactory = new VoyageFactory(filePath);
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
