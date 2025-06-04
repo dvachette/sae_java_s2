@@ -21,14 +21,20 @@ public class Parcours {
         this.length = length;
         this.path = path;
     }
+@SuppressWarnings("rawtypes")
 
-    public static Parcours parcoursGlouton(@SuppressWarnings("rawtypes") Graph g) {
+    /**
+     * @author Ethan
+     * @param g
+     * @param start
+     * @return 
+     */
+    public static Parcours parcoursGlouton( Graph g, Point start) {
         @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
         ArrayList<Point> path = new ArrayList<>();
-        Random rng = new Random();
-        Point current = pool.remove(rng.nextInt(pool.size()));
+        Point current = start;
         path.add(current);
         double length = 0;
         Point nextPoint;
@@ -47,7 +53,9 @@ public class Parcours {
      * @param g
      * @return 
      */
-    public static Parcours parcoursAleatoire(@SuppressWarnings("rawtypes") Graph g) {
+
+@SuppressWarnings("rawtypes") 
+    public static Parcours parcoursAleatoire(Graph g) {
         @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
@@ -67,16 +75,18 @@ public class Parcours {
     /**
      * @author Ethan
      * @param g
+     * @param start
      * @return 
      */
 
-    public static Parcours parcoursInsertion(@SuppressWarnings("rawtypes") Graph g) {
+@SuppressWarnings("rawtypes") 
+
+    public static Parcours parcoursInsertion(Graph g, Point start) {
         @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
         ArrayList<Point> pool = new ArrayList<>(points.values());
         ArrayList<Point> path = new ArrayList<>();
-        Random rng = new Random();
-        Point current = pool.remove(rng.nextInt(pool.size()));
+        Point current = start;
         path.add(current);
         double length = 0;
 
@@ -107,6 +117,59 @@ public class Parcours {
         length += path.getLast().distanceOf(path.getFirst()); // Return to start
         return new Parcours(length, path);
     }
+
+    /**
+     * @author Ethan
+     * @param g
+     * @param start
+     * @return 
+     */
+
+    public static Parcours MeilleurGlouton(Graph<Point> g, Point start) {
+        Parcours best = parcoursGlouton(g, start);
+        for (Point p : g.getPoints().values()) {
+            Parcours current = parcoursGlouton(g, p);
+            if (current.getLength() < best.getLength()) {
+                best = current;
+            }
+        }
+        return best;
+    }
+
+    /**
+     * @Author Ethan
+     * @param g
+     * @return
+     */
+
+     public static Parcours MeilleurInsertion(Graph<Point> g, Point start) {
+        Parcours best = parcoursInsertion(g, start);
+        for (Point p : g.getPoints().values()) {
+            Parcours current = parcoursInsertion(g, p);
+            if (current.getLength() < best.getLength()) {
+                best = current;
+            }
+        }
+        return best;
+     }
+
+    /**
+        * @author Ethan 
+        * @param g
+        * @return
+    */
+
+    public static Parcours MeilleurAll(Graph<Point> g){
+        Random rng = new Random();
+        Point start = g.getPoints().get(rng.nextInt(0, g.getPoints().size()));
+        Parcours best = MeilleurInsertion(g, start);
+        Parcours current = MeilleurGlouton(g, start);
+        if (current.getLength() < best.getLength()) {
+            best = current;
+        }
+        return best;
+    }
+
 
     public double getLength() {
         return length;
