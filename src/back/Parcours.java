@@ -64,6 +64,12 @@ public class Parcours {
         return new Parcours(length, path);
     }
 
+    /**
+     * @author Ethan
+     * @param g
+     * @return 
+     */
+
     public static Parcours parcoursInsertion(@SuppressWarnings("rawtypes") Graph g) {
         @SuppressWarnings("unchecked")
         TreeMap<Integer, Point> points = g.getPoints();
