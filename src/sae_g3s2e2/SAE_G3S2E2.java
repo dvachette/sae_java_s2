@@ -29,7 +29,7 @@ public class SAE_G3S2E2 {
         System.out.println(pe1.closest(points));
         
         //test voyage
-        VoyageFactory voyageFactory = new VoyageFactory("sae_java_s2\\User_File\\test8.txt");
+        VoyageFactory voyageFactory = new VoyageFactory("User_File/test8.txt");
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
