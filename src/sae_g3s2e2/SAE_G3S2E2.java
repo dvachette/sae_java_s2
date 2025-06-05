@@ -1,6 +1,7 @@
 package sae_g3s2e2;
 
 import back.*;
+import front.TestComponents;
 import java.util.ArrayList;
 
 /**
@@ -23,13 +24,18 @@ public class SAE_G3S2E2 {
         PointEuclidien pe2 = new PointEuclidien(2, 1, 1);
         PointEuclidien pe3 = new PointEuclidien(3, 0, 2);
         
+        Graph<Point> g2 = new Graph<Point>();
+        g2.addPoint(pe1);
+        g2.addPoint(pe2);
+        g2.addPoint(pe3);
+        
         ArrayList<Point> points = new ArrayList<>();
         points.add(pe3);
         points.add(pe2);
         System.out.println(pe1.closest(points));
         
         //test voyage
-        VoyageFactory voyageFactory = new VoyageFactory("sae_java_s2\\User_File\\test8.txt");
+        VoyageFactory voyageFactory = new VoyageFactory("User_File/test8.txt");
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
@@ -43,6 +49,8 @@ public class SAE_G3S2E2 {
             System.out.println("Type de voyage inconnu.");
         }
         
+        
+        new TestComponents(g2);
 
 
     }
