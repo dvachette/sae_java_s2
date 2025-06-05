@@ -8,6 +8,13 @@
             <file>file:/home/donat/sae_java_s2/src/front/DistanceTable.java</file>
             <file>file:/home/donat/sae_java_s2/src/front/DistanceTableModel.java</file>
             <file>file:/home/donat/sae_java_s2/src/front/TestComponents.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/Point.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/PointEuclidien.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/Parcours.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/VoyageEucli.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/Graph.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/Voyage.java</file>
+            <file>file:/E:/S2/SAE/sae_java_s2/src/back/PointGeographique.java</file>
         </group>
     </open-files>
 </project-private>
