@@ -6,7 +6,7 @@ package back;
 
 public class VoyageGeo extends Voyage {
 
-    public Graph<PointGeographique> graph;
+    private Graph<PointGeographique> graph;
 
     public VoyageGeo() {
         super();

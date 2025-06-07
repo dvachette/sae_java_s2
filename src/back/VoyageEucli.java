@@ -6,7 +6,7 @@ package back;
 
 public class VoyageEucli extends Voyage {
 
-    public Graph<PointEuclidien> graph;
+    private Graph<PointEuclidien> graph;
 
     public VoyageEucli() {
         super();
