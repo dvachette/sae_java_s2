@@ -23,6 +23,7 @@ public class Parcours<T extends Point> {
         this.length = length;
         this.path = path;
     }
+    
     public double getLength() {
         return length;
     }
