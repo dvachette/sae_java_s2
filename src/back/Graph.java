@@ -123,10 +123,25 @@ public class Graph<T extends Point> {
     
     public Parcours<T> parcoursGlouton() {
         ArrayList<T> pool = new ArrayList<>(points.values());
+        T start = pool.remove(0);
+        int size = this.points.size();
+        Parcours<T> shortest = parcoursGlouton(start, pool);
+        Parcours<T> current;
+        for (int i = 1; i < size; i++) {
+            pool = new ArrayList<>(points.values());
+            start = pool.remove(i);
+            current = parcoursGlouton(start, pool);
+            if (current.getLength() < shortest.getLength()) {
+                shortest = current;
+            }
+        }
+        return shortest;
+    }
+    
+        public Parcours<T> parcoursGlouton(T start, ArrayList<T> pool) {
         ArrayList<T> path = new ArrayList<>();
         
-        Random rng = new Random();
-        T current = pool.remove(rng.nextInt(pool.size()));
+        T current = start;
         path.add(current);
         double length = 0;
         T nextPoint;
@@ -141,6 +156,8 @@ public class Graph<T extends Point> {
         length += current.distanceOf(path.get(0)); // Return to start
         return new Parcours<>(length, path);
     }
+    
+    
     
     public Parcours<T> parcoursAleatoire() {
         ArrayList<T> pool = new ArrayList<>(points.values());
@@ -159,11 +176,29 @@ public class Graph<T extends Point> {
     
     public Parcours<T> parcoursInsertion() {
         ArrayList<T> pool = new ArrayList<>(points.values());
+        T start = pool.remove(0);
+        int size = this.points.size();
+        Parcours<T> shortest = parcoursInsertion(start, pool);
+        Parcours<T> current;
+        for (int i = 1; i < size; i++) {
+            pool = new ArrayList<>(points.values());
+            start = pool.remove(i);
+            current = parcoursInsertion(start, pool);
+            if (current.getLength() < shortest.getLength()) {
+                shortest = current;
+            }
+        }
+        return shortest;
+    }
+    
+    public Parcours<T> parcoursInsertion(T start, ArrayList<T> pool) {
         ArrayList<T> path = new ArrayList<>();
-        Random rng = new Random();
-        T current = pool.remove(rng.nextInt(pool.size()));
+        T current = start;
         path.add(current);
-        double length = 0;
+        T closestToStart = (T) start.closest(pool);
+        pool.remove(closestToStart);
+        path.add(closestToStart);
+        double length = start.distanceOf(closestToStart);
 
         while (!pool.isEmpty()) {
             double minDistance = Double.MAX_VALUE;
