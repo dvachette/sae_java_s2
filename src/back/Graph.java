@@ -4,6 +4,7 @@
  */
 package back;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 import java.util.TreeMap;
@@ -119,4 +120,118 @@ public class Graph<T extends Point> {
     public int maxIdValue() {
         return Collections.max(points.keySet());
     }
+    
+    public Parcours<T> parcoursGlouton() {
+        ArrayList<T> pool = new ArrayList<>(points.values());
+        T start = pool.remove(0);
+        int size = this.points.size();
+        Parcours<T> shortest = parcoursGlouton(start, pool);
+        Parcours<T> current;
+        for (int i = 1; i < size; i++) {
+            pool = new ArrayList<>(points.values());
+            start = pool.remove(i);
+            current = parcoursGlouton(start, pool);
+            if (current.getLength() < shortest.getLength()) {
+                shortest = current;
+            }
+        }
+        return shortest;
+    }
+    
+        public Parcours<T> parcoursGlouton(T start, ArrayList<T> pool) {
+        ArrayList<T> path = new ArrayList<>();
+        
+        T current = start;
+        path.add(current);
+        double length = 0;
+        T nextPoint;
+        
+        while (!pool.isEmpty()) { 
+            nextPoint = (T) current.closest(pool);
+            length += nextPoint.distanceOf(current);
+            path.add(nextPoint);
+            pool.remove(nextPoint);
+            current = nextPoint;
+        }
+        length += current.distanceOf(path.get(0)); // Return to start
+        return new Parcours<>(length, path);
+    }
+    
+    
+    
+    public Parcours<T> parcoursAleatoire() {
+        ArrayList<T> pool = new ArrayList<>(points.values());
+        Random rng = new Random();
+        ArrayList<T> path = new ArrayList<>();
+        int size = pool.size();
+        for (int i = size; i > 0; i++) {
+            path.add(pool.get(rng.nextInt(0, i)));
+        }
+        double length = path.getLast().distanceOf(path.getFirst());
+        for (int i = 0; i < size - 1; i++) {
+            length += path.get(i).distanceOf(path.get(i + 1));
+        }
+        return new Parcours(length, path);
+    }
+    
+    public Parcours<T> parcoursInsertion() {
+        ArrayList<T> pool = new ArrayList<>(points.values());
+        T start = pool.remove(0);
+        int size = this.points.size();
+        Parcours<T> shortest = parcoursInsertion(start, pool);
+        Parcours<T> current;
+        for (int i = 1; i < size; i++) {
+            pool = new ArrayList<>(points.values());
+            start = pool.remove(i);
+            current = parcoursInsertion(start, pool);
+            if (current.getLength() < shortest.getLength()) {
+                shortest = current;
+            }
+        }
+        return shortest;
+    }
+    
+    public Parcours<T> parcoursInsertion(T start, ArrayList<T> pool) {
+        ArrayList<T> path = new ArrayList<>();
+        T current = start;
+        path.add(current);
+        T closestToStart = (T) start.closest(pool);
+        pool.remove(closestToStart);
+        path.add(closestToStart);
+        double length = start.distanceOf(closestToStart);
+
+        while (!pool.isEmpty()) {
+            double minDistance = Double.MAX_VALUE;
+            T nextPoint = null;
+            int insertIndex = -1;
+
+            for (int i = 0; i < path.size(); i++) {
+                T p1 = path.get(i);
+                T p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
+                for (T candidate : pool) {
+                    double distance = p1.distanceOf(candidate) + candidate.distanceOf(p2) - p1.distanceOf(p2);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        nextPoint = candidate;
+                        insertIndex = i + 1;
+                    }
+                }
+            }
+
+            if (nextPoint != null) {
+                length += minDistance;
+                path.add(insertIndex, nextPoint);
+                pool.remove(nextPoint);
+            }
+        }
+        length += path.getLast().distanceOf(path.getFirst()); // Return to start
+        return new Parcours(length, path);
+    }
+
+    @Override
+    public String toString() {
+        return "Graph{" + "points=" + points + '}';
+    }
+    
+
 }

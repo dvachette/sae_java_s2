@@ -52,14 +52,16 @@ public class PointEuclidien implements Point {
     public void setId(int id) {
         this.id = id;
     }
-    
-    @Override
-    public String toString() {
-        return "PointEuclidien{" + "x=" + x + ", y=" + y + '}';
-    }
 
     @Override
-    public Point closest(ArrayList<Point> points) {
+    public String toString() {
+        return "PointEuclidien{" + "x=" + x + ", y=" + y + ", id=" + id + '}';
+    }
+    
+    
+
+    @Override
+    public Point closest(ArrayList<? extends Point> points) {
         double miniDist = this.distanceOf(points.getFirst());
         Point closest = points.getFirst();
         for (Point p : points) {
@@ -73,7 +75,4 @@ public class PointEuclidien implements Point {
         }
         return closest;
     }
-    
-    
-    
 }

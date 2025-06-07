@@ -3,11 +3,11 @@ package back;
 /**
  * @author Ethan
  */
-
 import java.io.FileInputStream;
 import java.util.Scanner;
 
 public class VoyageFactory {
+
     private String chemin;
 
     public VoyageFactory(String chemin) {
@@ -23,7 +23,7 @@ public class VoyageFactory {
         String displayType = "";
         String edgeWeightFormat = "";
 
-        try{
+        try {
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
             String line;
@@ -35,27 +35,20 @@ public class VoyageFactory {
                 String[] parts = line.split(":");
                 if ((parts[0].trim()).equals("NAME")) {
                     name = parts[1].trim();
-                }
-                else if ((parts[0].trim()).equals("TYPE")) {
+                } else if ((parts[0].trim()).equals("TYPE")) {
                     type = parts[1].trim();
-                }
-                else if ((parts[0].trim()).equals("COMMENT")) {
+                } else if ((parts[0].trim()).equals("COMMENT")) {
                     comment = parts[1].trim();
-                }
-                else if ((parts[0].trim()).equals("DIMENSION")) {
+                } else if ((parts[0].trim()).equals("DIMENSION")) {
                     dimension = Integer.parseInt(parts[1].trim());
-                }
-                else if ((parts[0].trim()).equals("EDGE_WEIGHT_TYPE")) {
+                } else if ((parts[0].trim()).equals("EDGE_WEIGHT_TYPE")) {
                     typeCoordinate = parts[1].trim();
-                }
-                else if ((parts[0].trim()).equals("DISPLAY_TYPE")) {
+                } else if ((parts[0].trim()).equals("DISPLAY_TYPE")) {
                     displayType = parts[1].trim();
-                }
-                else if ((parts[0].trim()).equals("EDGE_WEIGHT_FORMAT")) {
+                } else if ((parts[0].trim()).equals("EDGE_WEIGHT_FORMAT")) {
                     edgeWeightFormat = parts[1].trim();
                 }
             }
-           
 
             if (typeCoordinate.equals("EUC_2D")) {
                 VoyageEucli voyage = new VoyageEucli();
@@ -67,21 +60,18 @@ public class VoyageFactory {
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
                 // Initialize the graph for Euclidean points
-                voyage.graph = new Graph<PointEuclidien>(); // TODO Already initialized in the constructor
-                // Read the NODE_COORD_SECTION
-
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
-                scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
                 line = scanner.nextLine();
+                Graph<PointEuclidien> gr = new Graph<>();
                 while (line != null && !line.trim().equals("EOF")) {
                     String[] parts = line.trim().split("\\s+");
                     int id = Integer.parseInt(parts[0]);
                     double x = Double.parseDouble(parts[1]);
                     double y = Double.parseDouble(parts[2]);
-                    PointEuclidien point = new PointEuclidien(x, y, id);
-                    voyage.graph.addPoint(point);
+                    gr.addPoint(new PointEuclidien(x, y, id));
+                    line = scanner.nextLine();
                 }
-            }
+                voyage.setGraph(gr);
+
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
@@ -94,22 +84,20 @@ public class VoyageFactory {
                 voyage.setTypeCoordinate(typeCoordinate);
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
-                voyage.graph = new Graph<PointGeographique>(); // TODO : Already initialized in the constructor
+                System.out.println("inside if");
 
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equals("NODE_COORD_SECTION")) {
-                scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
                 line = scanner.nextLine();
+                Graph<PointGeographique> gr = new Graph<>();
                 while (line != null && !line.trim().equals("EOF")) {
                     String[] parts = line.trim().split("\\s+");
                     int id = Integer.parseInt(parts[0]);
                     double x = Double.parseDouble(parts[1]);
                     double y = Double.parseDouble(parts[2]);
-                    PointGeographique point = new PointGeographique(x, y, id);
-                    voyage.graph.addPoint(point);
+                    System.out.printf("Adding point x = %f, y = %f \n", x, y);
+                    gr.addPoint(new PointGeographique(x, y, id));
+                    line = scanner.nextLine();
                 }
-            }
-
-
+                voyage.setGraph(gr);
 
                 scanner.close();
                 fileInputStream.close();
@@ -119,10 +107,9 @@ public class VoyageFactory {
                 fileInputStream.close();
                 throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); //TODO : We are expected to handle errors
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace(); // TODO : better error handling
         }
-        return null; 
+        return null;
     }
 }

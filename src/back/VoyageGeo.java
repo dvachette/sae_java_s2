@@ -17,4 +17,9 @@ public class VoyageGeo extends Voyage {
     public Graph<PointGeographique> getGraph() {
         return graph;
     }
+
+    public void setGraph(Graph<PointGeographique> graph) {
+        this.graph = graph;
+    }
+    
 }

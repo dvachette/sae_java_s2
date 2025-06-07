@@ -35,24 +35,28 @@ public class SAE_G3S2E2 {
         System.out.println(pe1.closest(points));
         
         //test voyage
-        VoyageFactory voyageFactory = new VoyageFactory("User_File/test8.txt");
+
+        VoyageFactory voyageFactory = new VoyageFactory("User_File/test1.txt");
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
             System.out.println("Voyage Euclidien: " + voyageEucli.getName());
             System.out.println("Graph: " + voyageEucli.getGraph());
+            System.out.println(voyageEucli);
+            System.out.println("Parcours Glouton : " + voyageEucli.getGraph().parcoursGlouton());
+            System.out.println("Parcours Insertion : " + voyageEucli.getGraph().parcoursInsertion());
+            
         } else if (voyage instanceof VoyageGeo) {
             VoyageGeo voyageGeo = (VoyageGeo) voyage;
             System.out.println("Voyage Geographique: " + voyageGeo.getName());
             System.out.println("Graph: " + voyageGeo.getGraph());
+            System.out.println(voyageGeo);
+            System.out.println("Parcours Glouton : " + voyageGeo.getGraph().parcoursGlouton());
+            System.out.println("Parcours Insertion : " + voyageGeo.getGraph().parcoursInsertion());
+            
         } else {
             System.out.println("Type de voyage inconnu.");
         }
-        
-        
-        new TestComponents(g2);
-
 
     }
-
 }
