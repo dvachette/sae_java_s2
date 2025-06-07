@@ -52,11 +52,13 @@ public class PointEuclidien implements Point {
     public void setId(int id) {
         this.id = id;
     }
-    
+
     @Override
     public String toString() {
-        return "PointEuclidien{" + "x=" + x + ", y=" + y + '}';
+        return "PointEuclidien{" + "x=" + x + ", y=" + y + ", id=" + id + '}';
     }
+    
+    
 
     @Override
     public Point closest(ArrayList<? extends Point> points) {
