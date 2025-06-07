@@ -13,5 +13,5 @@ import java.util.ArrayList;
 public interface Point {
     double distanceOf(Point p);
     int getId();
-    Point closest(ArrayList<Point> points);
+    Point closest(ArrayList<? extends Point> points);
 }

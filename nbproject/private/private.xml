@@ -2,6 +2,12 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/donat/sae_java_s2/src/back/Parcours.java</file>
+            <file>file:/home/donat/sae_java_s2/src/sae_g3s2e2/SAE_G3S2E2.java</file>
+            <file>file:/home/donat/sae_java_s2/src/back/Voyage.java</file>
+            <file>file:/home/donat/sae_java_s2/src/back/VoyageEucli.java</file>
+            <file>file:/home/donat/sae_java_s2/src/back/VoyageFactory.java</file>
+        </group>
     </open-files>
 </project-private>
