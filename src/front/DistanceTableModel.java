@@ -16,44 +16,58 @@ import javax.swing.table.AbstractTableModel;
  */
 public class DistanceTableModel extends AbstractTableModel {
     
-    private Graph<Point> graph;
+    private Graph<? extends Point> graph;
     private TreeMap<Integer, TreeMap<Integer, Double>> distances;
     
-    public DistanceTableModel(Graph<Point> graph) {
+    public DistanceTableModel(Graph<? extends Point> graph) {
         this.graph = graph;
-        this.distances = graph.getDistancesTable();
     }
     
+    @Override
     public String getColumnName(int col) {
-        Iterator<Integer> iter = this.distances.keySet().iterator();
-        int nthKey = 0;
-
-        for (int i = 0; i <= col && iter.hasNext(); i++) {
-            nthKey = iter.next();
+        if (col == 0) {
+            return "";
         }
-        return String.valueOf(nthKey);
+        col --;
+        Iterator<Integer> iter =  graph.getPoints().keySet().iterator();
+        for (int i = 0; i < col && iter.hasNext(); i++) {
+            iter.next();
+        }
+        return String.valueOf(iter.hasNext() ? iter.next() : null);
     }
 
+    @Override
     public int getRowCount() {
-        return this.distances.size();
+        return this.graph.getDistancesTable().size();
     }
 
+    @Override
     public int getColumnCount() {
-        return this.distances.size();
+        return this.graph.getDistancesTable().size()+1;
     }
 
+    @Override
     public Object getValueAt(int row, int col) {
-        return this.distances.get(col).get(row);
+        if (col == 0) {
+            Iterator<Integer> iter =  graph.getPoints().keySet().iterator();
+            for (int i = 0; i < col && iter.hasNext(); i++) {
+                iter.next();
+            }
+            return String.valueOf(iter.next());
+        }
+        return this.graph.getDistances(Integer.parseInt(this.getColumnName(col))).get(Integer.valueOf(this.getColumnName(row+1)));
     }
 
+    @Override
     public boolean isCellEditable(int row, int col) {
         return false;
     }
 
+    @Override
     public void setValueAt(Object value, int row, int col) {
-        this.distances.get(col).replace(row, (Double) value);
         this.fireTableCellUpdated(row, col);
     }
+    
     
     public void updateTable() {
         this.fireTableDataChanged();

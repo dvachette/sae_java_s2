@@ -1,7 +1,7 @@
 package sae_g3s2e2;
 
 import back.*;
-import front.TestComponents;
+import front.DistanceTableModel;
 import java.util.ArrayList;
 
 /**
@@ -45,6 +45,10 @@ public class SAE_G3S2E2 {
             System.out.println(voyageEucli);
             System.out.println("Parcours Glouton : " + voyageEucli.getGraph().parcoursGlouton());
             System.out.println("Parcours Insertion : " + voyageEucli.getGraph().parcoursInsertion());
+            var dtm = new DistanceTableModel(voyageEucli.getGraph());
+            System.out.println(dtm.getColumnName(0));
+            System.out.println(dtm.getColumnCount());
+            System.out.println(dtm.getValueAt(0, 1));
             
         } else if (voyage instanceof VoyageGeo) {
             VoyageGeo voyageGeo = (VoyageGeo) voyage;
@@ -53,10 +57,17 @@ public class SAE_G3S2E2 {
             System.out.println(voyageGeo);
             System.out.println("Parcours Glouton : " + voyageGeo.getGraph().parcoursGlouton());
             System.out.println("Parcours Insertion : " + voyageGeo.getGraph().parcoursInsertion());
+            var dtm = new DistanceTableModel(voyageGeo.getGraph());
+            System.out.println(dtm.getColumnName(0));
+            System.out.println(dtm.getColumnCount());
+            System.out.println(dtm.getValueAt(0, 0));
+            
             
         } else {
             System.out.println("Type de voyage inconnu.");
         }
 
+        
+        
     }
 }
