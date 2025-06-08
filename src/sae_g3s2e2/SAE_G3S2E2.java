@@ -2,6 +2,7 @@ package sae_g3s2e2;
 
 import back.*;
 import front.DistanceTableModel;
+import front.TestComponents;
 import java.util.ArrayList;
 
 /**
@@ -36,7 +37,7 @@ public class SAE_G3S2E2 {
         
         //test voyage
 
-        VoyageFactory voyageFactory = new VoyageFactory("User_File/test1.txt");
+        VoyageFactory voyageFactory = new VoyageFactory("User_File/test6.txt");
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
@@ -49,6 +50,7 @@ public class SAE_G3S2E2 {
             System.out.println(dtm.getColumnName(0));
             System.out.println(dtm.getColumnCount());
             System.out.println(dtm.getValueAt(0, 1));
+            new TestComponents(voyageEucli.getGraph());
             
         } else if (voyage instanceof VoyageGeo) {
             VoyageGeo voyageGeo = (VoyageGeo) voyage;
@@ -61,7 +63,8 @@ public class SAE_G3S2E2 {
             System.out.println(dtm.getColumnName(0));
             System.out.println(dtm.getColumnCount());
             System.out.println(dtm.getValueAt(0, 0));
-            
+            new TestComponents(voyageGeo.getGraph());
+
             
         } else {
             System.out.println("Type de voyage inconnu.");

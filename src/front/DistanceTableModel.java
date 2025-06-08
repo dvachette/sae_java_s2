@@ -50,7 +50,7 @@ public class DistanceTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int col) {
         if (col == 0) {
             Iterator<Integer> iter =  graph.getPoints().keySet().iterator();
-            for (int i = 0; i < col && iter.hasNext(); i++) {
+            for (int i = 0; i < row && iter.hasNext(); i++) {
                 iter.next();
             }
             return String.valueOf(iter.next());

@@ -22,12 +22,12 @@ import javax.swing.JTable;
  * @author donat
  */
 public class DistanceTable extends JComponent {
-    private Graph<Point> graph;
+    private Graph<? extends Point> graph;
     private JScrollPane scrollContainer;
     private DistanceTableModel tableModel;
     private JTable table;
     
-    public DistanceTable(Graph<Point> graph) {
+    public DistanceTable(Graph<? extends Point> graph) {
         this.graph = graph;
         this.tableModel = new DistanceTableModel(graph);
         this.repaint();
