@@ -37,7 +37,7 @@ public class SAE_G3S2E2 {
         
         //test voyage
 
-        VoyageFactory voyageFactory = new VoyageFactory("User_File/test6.txt");
+        VoyageFactory voyageFactory = new VoyageFactory("User_File/test1.txt");
         Voyage voyage = voyageFactory.createVoyage();
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;

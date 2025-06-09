@@ -21,7 +21,7 @@ public class TestComponents extends JFrame {
         JPanel mainPanel = new JPanel();
         var dtm = new DistanceTableModel(g);
         var dt = new JTable(dtm);
-        var jsp = new JScrollPane(dt);;
+        var jsp = new JScrollPane(dt);
         
         mainPanel.add(jsp);
         this.setContentPane(mainPanel);
