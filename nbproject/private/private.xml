@@ -13,8 +13,9 @@
             <file>file:/home/donat/sae_java_s2/src/back/VoyageEucli.java</file>
             <file>file:/home/donat/sae_java_s2/src/back/VoyageFactory.java</file>
             <file>file:/home/donat/sae_java_s2/src/back/VoyageGeo.java</file>
-            <file>file:/home/donat/sae_java_s2/src/front/DistanceTable.java</file>
             <file>file:/home/donat/sae_java_s2/src/front/DistanceTableModel.java</file>
+            <file>file:/home/donat/sae_java_s2/src/front/GMapEucli.java</file>
+            <file>file:/home/donat/sae_java_s2/src/front/TestComponents.java</file>
         </group>
     </open-files>
 </project-private>
