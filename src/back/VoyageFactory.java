@@ -30,7 +30,6 @@ public class VoyageFactory {
         try {
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
-        ){
             
             String line;
             while (scanner.hasNextLine()) {

@@ -121,6 +121,7 @@ public class Graph<T extends Point> {
         return Collections.max(points.keySet());
     }
     
+    @SuppressWarnings("unchecked")
     public Parcours<T> parcoursGlouton() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         ArrayList<T> path = new ArrayList<>();
@@ -142,6 +143,7 @@ public class Graph<T extends Point> {
         return new Parcours<>(length, path);
     }
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Parcours<T> parcoursAleatoire() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         Random rng = new Random();
@@ -157,6 +159,7 @@ public class Graph<T extends Point> {
         return new Parcours(length, path);
     }
     
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Parcours<T> parcoursInsertion() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         ArrayList<T> path = new ArrayList<>();
