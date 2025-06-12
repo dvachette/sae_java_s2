@@ -82,7 +82,7 @@ public class PointGeographique implements Point {
     }
     
         @Override
-    public Point closest(ArrayList<Point> points) {
+    public Point closest(ArrayList<? extends Point> points) {
         double miniDist = this.distanceOf(points.getFirst());
         Point closest = points.getFirst();
         for (Point p : points) {

@@ -11,13 +11,15 @@ import java.util.TreeMap;
 /**
  *
  * @author donat
+ * @param <T>
+ * 
  */
-public class Parcours {
+public class Parcours<T extends Point> {
 
     private double length;
-    private ArrayList<Point> path;
+    private ArrayList<T> path;
 
-    public Parcours(double length, ArrayList<Point> path) {
+    public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
     }
@@ -175,7 +177,7 @@ public class Parcours {
         return length;
     }
 
-    public ArrayList<Point> getPath() {
+    public ArrayList<T> getPath() {
         return path;
     }
 

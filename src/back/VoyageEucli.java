@@ -17,4 +17,8 @@ public class VoyageEucli extends Voyage {
     public Graph<PointEuclidien> getGraph() {
         return graph;
     }
+    
+    public void setGraph(Graph<PointEuclidien> graph) {
+        this.graph = graph;
+    }
 }

@@ -3,7 +3,6 @@ package back;
 /**
  * @author Ethan
  */
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -12,6 +11,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 public class VoyageFactory {
+
     private String chemin;
 
     public VoyageFactory(String chemin) {
@@ -27,7 +27,7 @@ public class VoyageFactory {
         String displayType = "";
         String edgeWeightFormat = "";
 
-        try(
+        try {
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
         ){
@@ -72,21 +72,19 @@ public class VoyageFactory {
                 voyage.setTypeCoordinate(typeCoordinate);
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
-                
-                // Read the NODE_COORD_SECTION
-
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
-                scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
+                // Initialize the graph for Euclidean points
                 line = scanner.nextLine();
+                Graph<PointEuclidien> gr = new Graph<>();
                 while (line != null && !line.trim().equals("EOF")) {
                     String[] parts = line.trim().split("\\s+");
                     int id = Integer.parseInt(parts[0]);
                     double x = Double.parseDouble(parts[1]);
                     double y = Double.parseDouble(parts[2]);
-                    PointEuclidien point = new PointEuclidien(x, y, id);
-                    voyage.graph.addPoint(point);
+                    gr.addPoint(new PointEuclidien(x, y, id));
+                    line = scanner.nextLine();
                 }
-            }
+                voyage.setGraph(gr);
+
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
@@ -100,18 +98,19 @@ public class VoyageFactory {
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
 
-                if (scanner.hasNextLine() && scanner.nextLine().trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
-                scanner.nextLine(); // Skip the "NODE_COORD_SECTION" line
                 line = scanner.nextLine();
+                Graph<PointGeographique> gr = new Graph<>();
                 while (line != null && !line.trim().equals("EOF")) {
                     String[] parts = line.trim().split("\\s+");
                     int id = Integer.parseInt(parts[0]);
                     double x = Double.parseDouble(parts[1]);
                     double y = Double.parseDouble(parts[2]);
-                    PointGeographique point = new PointGeographique(x, y, id);
-                    voyage.graph.addPoint(point);
+                    System.out.printf("Adding point x = %f, y = %f \n", x, y);
+                    gr.addPoint(new PointGeographique(x, y, id));
+                    line = scanner.nextLine();
                 }
-            }
+                voyage.setGraph(gr);
+
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
@@ -188,6 +187,6 @@ public class VoyageFactory {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         }
-        return null; 
+        return null;
     }
 }

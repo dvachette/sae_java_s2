@@ -37,16 +37,20 @@ public class SAE_G3S2E2 {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
             System.out.println("Voyage Euclidien: " + voyageEucli.getName());
             System.out.println("Graph: " + voyageEucli.getGraph());
+            System.out.println(voyageEucli);
+            System.out.println(voyageEucli.getGraph().parcoursGlouton());
+            System.out.println(voyageEucli.getGraph().parcoursInsertion());
+            
         } else if (voyage instanceof VoyageGeo) {
             VoyageGeo voyageGeo = (VoyageGeo) voyage;
             System.out.println("Voyage Geographique: " + voyageGeo.getName());
             System.out.println("Graph: " + voyageGeo.getGraph());
+            System.out.println(voyageGeo);
+            System.out.println(voyageGeo.getGraph().parcoursGlouton());
+            System.out.println(voyageGeo.getGraph().parcoursInsertion());
+            
         } else {
             System.out.println("Type de voyage inconnu.");
         }
-        
-
-
     }
-
 }

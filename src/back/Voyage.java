@@ -34,7 +34,7 @@ public class Voyage {
         this.displayType = displayType;
         this.edgeWeightFormat = edgeWeightFormat;
     }
-
+    
     public String getName() {
         return name;
     }
