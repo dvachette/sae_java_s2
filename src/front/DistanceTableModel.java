@@ -21,6 +21,7 @@ public class DistanceTableModel extends AbstractTableModel {
     
     public DistanceTableModel(Graph<? extends Point> graph) {
         this.graph = graph;
+        this.distances = this.graph.getDistancesTable();
     }
     
     @Override
@@ -38,12 +39,12 @@ public class DistanceTableModel extends AbstractTableModel {
 
     @Override
     public int getRowCount() {
-        return this.graph.getDistancesTable().size();
+        return this.distances.size();
     }
 
     @Override
     public int getColumnCount() {
-        return this.graph.getDistancesTable().size()+1;
+        return this.distances.size()+1;
     }
 
     @Override
@@ -55,7 +56,7 @@ public class DistanceTableModel extends AbstractTableModel {
             }
             return String.valueOf(iter.next());
         }
-        return this.graph.getDistances(Integer.parseInt(this.getColumnName(col))).get(Integer.valueOf(this.getColumnName(row+1)));
+        return this.distances.get(Integer.valueOf(getColumnName(col))).get(Integer.valueOf((String) getValueAt(row, 0)));
     }
 
     @Override
@@ -69,6 +70,9 @@ public class DistanceTableModel extends AbstractTableModel {
     }
     
     
+    public void updateTable(int row, int col) {
+        this.fireTableCellUpdated(row, col);
+    }
     public void updateTable() {
         this.fireTableDataChanged();
     }
