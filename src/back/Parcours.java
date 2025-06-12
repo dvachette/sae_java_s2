@@ -185,5 +185,4 @@ public class Parcours<T extends Point> {
     public String toString() {
         return "Parcours{" + "length=" + length + ", path=" + path + '}';
     }
-
 }

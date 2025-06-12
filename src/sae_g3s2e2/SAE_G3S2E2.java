@@ -13,7 +13,7 @@ public class SAE_G3S2E2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String filePath = "sae_java_s2/User_File/test.txt";
+        String filePath = "sae_java_s2/User_File/test1.txt";
         // Test lecture de fichier
         Graph<PointEuclidien> graph = Graph.randomPointSet(10);
         System.out.println(graph.getPoint(2));
