@@ -132,7 +132,7 @@ public class Voyage {
             JDialog dialog = new JDialog();
             dialog.setType(java.awt.Window.Type.UTILITY);
             dialog.setTitle("Error");
-            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'ouverture du fichier.");
+            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'ouverture du fichier pour écriture.");
             dialog.add(label);
             dialog.setSize(400, 200);
             dialog.setLocationRelativeTo(null);
