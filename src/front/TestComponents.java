@@ -19,9 +19,7 @@ public class TestComponents extends JFrame {
     public TestComponents(Graph<? extends Point> g) {
         this.setLocationRelativeTo(null);
         JPanel mainPanel = new JPanel();
-        var dtm = new DistanceTableModel(g);
-        var dt = new JTable(dtm);
-        var jsp = new JScrollPane(dt);
+        var jsp = DistanceTable.table(g);
         
         mainPanel.add(jsp);
         this.setContentPane(mainPanel);

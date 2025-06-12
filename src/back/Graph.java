@@ -38,7 +38,7 @@ public class Graph<T extends Point> {
     public TreeMap<Integer, T> getPoints() {
         return points;
     }
-
+    
     /**
      * @author donat
      * 
@@ -48,6 +48,7 @@ public class Graph<T extends Point> {
      */
     public void setPoints(TreeMap<Integer, T> points) {
         this.points = points;
+        
     }
 
     /**
@@ -99,7 +100,16 @@ public class Graph<T extends Point> {
     public TreeMap<Integer, TreeMap<Integer, Double>> getDistancesTable() {
         TreeMap<Integer, TreeMap<Integer, Double>> map = new TreeMap<>();
         for (int i : points.keySet()) {
-            map.put(i, getDistances(i));
+            map.put(i, new TreeMap<Integer, Double>());
+        }
+        double dist = 0.0;
+        ArrayList<Integer> pointsList = new ArrayList(points.keySet());
+        for (int i = 0; i < pointsList.size(); i++) {
+            for (int j = 0; (j < i+1) && (j < pointsList.size()); j++) {
+                dist = points.get(pointsList.get(i)).distanceOf(points.get(pointsList.get(j)));
+                map.get(pointsList.get(i)).put(pointsList.get(j), dist);
+                map.get(pointsList.get(j)).put(pointsList.get(i), dist);
+            }
         }
         return map;
     }
