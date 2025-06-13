@@ -30,27 +30,13 @@ public class SAE_G3S2E2 {
         points.add(pe2);
         System.out.println(pe1.closest(points));
         
-        //test voyage
-        VoyageFactory voyageFactory = new VoyageFactory(filePath);
-        Voyage voyage = voyageFactory.createVoyage();
-        if (voyage instanceof VoyageEucli) {
-            VoyageEucli voyageEucli = (VoyageEucli) voyage;
-            System.out.println("Voyage Euclidien: " + voyageEucli.getName());
-            System.out.println("Graph: " + voyageEucli.getGraph());
-            System.out.println(voyageEucli);
-            System.out.println(voyageEucli.getGraph().parcoursGlouton());
-            System.out.println(voyageEucli.getGraph().parcoursInsertion());
-            
-        } else if (voyage instanceof VoyageGeo) {
-            VoyageGeo voyageGeo = (VoyageGeo) voyage;
-            System.out.println("Voyage Geographique: " + voyageGeo.getName());
-            System.out.println("Graph: " + voyageGeo.getGraph());
-            System.out.println(voyageGeo);
-            System.out.println(voyageGeo.getGraph().parcoursGlouton());
-            System.out.println(voyageGeo.getGraph().parcoursInsertion());
-            
-        } else {
-            System.out.println("Type de voyage inconnu.");
-        }
+        //test export
+        Voyage voyage = new Voyage("Test Voyage", "TSP", "Test Comment", 10, "EUC_2D", "Display Type", "EUC_2D");
+        Graph<PointEuclidien> voyageGraph = Graph.randomPointSet(10);
+        Parcours<PointEuclidien> parcours = voyageGraph.parcoursGlouton();
+        voyageGraph.getPoint(0);
+        filePath = "sae_java_s2/User_File/test_voyage.txt";
+        voyage.exportToFile(filePath, parcours);
+        System.out.println("Voyage exported to " + filePath);
     }
 }

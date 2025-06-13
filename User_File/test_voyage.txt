@@ -1,0 +1,7 @@
+NAME : Test Voyage
+TYPE : TSP
+COMMENT : Test Comment
+DIMENSION : 10
+EDGE_WEIGHT_TYPE : papointu
+DISPLAY_DATA_TYPE : Display Type
+NODE_COORD_SECTION
