@@ -48,7 +48,7 @@ public class GMapEucli extends JComponent{
         }
         
         this.listePointsConvertis = new ArrayList();
-        setPreferredSize(new Dimension(400+margeInit,400+margeInit));
+        setPreferredSize(new Dimension(900+margeInit,600+margeInit));
         this.setScales();
         this.miseEnEchelle();
            
@@ -83,14 +83,16 @@ public class GMapEucli extends JComponent{
         //marges X et Y fixées pour centrer les points
         if ((maxX-minX) >= (maxY - minY)){
             etendue = maxX - minX;
-            margeX = margeInit;
+            margeX = margeInit/2;
             margeY = (int) (margeInit + ((this.getPreferredSize().height-(maxY-minY))/2 ));
+            margeY -= margeInit/2;
             scaleX[0] = scaleY[0] = (this.getPreferredSize().width-(margeInit*2))/etendue;
         } else {
             etendue = maxY - minY;
             scaleY[0] = scaleX[0] = (this.getPreferredSize().height-(margeInit*2))/etendue;
-            margeY = margeInit;
+            margeY = margeInit/2;
             margeX = (int) ((this.getPreferredSize().width-((maxX-minX)*scaleX[0]))/2 );
+            margeX -= margeInit/2;
         }
         
         scaleX[1] = minX;
@@ -116,7 +118,8 @@ public class GMapEucli extends JComponent{
             
             y = listePoints.get(i).getY()-scaleY[1];
             y = y*(scaleY[0]);
-            y = y + margeY;
+            y = this.getPreferredSize().height - y;
+            y = y - margeInit/2;
             listePointsConvertis.add(new PointEuclidien(x, y, listePoints.get(i).getId()));
         }   
     }
@@ -128,19 +131,19 @@ public class GMapEucli extends JComponent{
         g.fillRect(0, 0, this.getPreferredSize().width, this.getPreferredSize().height);
         
         g.setColor(Color.gray);
-        g.fillRect(margeInit-10, margeInit-10, this.getPreferredSize().width-(margeInit*2)+20, this.getPreferredSize().height-(margeInit*2)+20);
+        g.fillRect(margeInit-10+(margeInit/2), margeInit-10-(margeInit/2), this.getPreferredSize().width-(margeInit*2)+20, this.getPreferredSize().height-(margeInit*2)+20);
         
         double origineX = scaleX[1] - (10/scaleX[0]);
         double origineY = scaleY[1] - (10/scaleY[0]);
         
         g.setColor(Color.black);
-        g.drawLine(margeInit-10, this.getPreferredSize().height-(margeInit/2), this.getPreferredSize().width-(margeInit-10), this.getPreferredSize().height-(margeInit/2));
+        g.drawLine(margeInit-10+(margeInit/2), this.getPreferredSize().height-margeInit, this.getPreferredSize().width-(margeInit/2)+10, this.getPreferredSize().height-margeInit);
         for(int i=0; i<(GMapEucli.this.getPreferredSize().width-(margeInit-10))-30 ; i+=30){
-            g.drawLine((margeInit-10)+i, (this.getPreferredSize().height-(margeInit/2))-5, (margeInit-10)+i, (this.getPreferredSize().height-(margeInit/2))+5);
+            g.drawLine((margeInit-10)+(margeInit/2)+i, this.getPreferredSize().height-margeInit-5, (margeInit-10)+(margeInit/2)+i, this.getPreferredSize().height-margeInit+5);
         }
-        g.drawLine((margeInit-10)/2, margeInit-10, (margeInit-10)/2, this.getPreferredSize().height-(margeInit-10));
+        g.drawLine((margeInit-10), margeInit-10-(margeInit/2), (margeInit-10), this.getPreferredSize().height-(margeInit-10)-(margeInit/2));
         for(int i=0; i<(GMapEucli.this.getPreferredSize().height-(margeInit-10))-30 ; i+=30){
-           g.drawLine(((margeInit-10)/2)-5, this.getPreferredSize().height-(margeInit-10)-i, ((margeInit-10)/2)+5, this.getPreferredSize().height-(margeInit-10)-i);
+           g.drawLine((margeInit-10)-5, this.getPreferredSize().height-(margeInit-10)-(margeInit/2)-i, (margeInit-10)+5, this.getPreferredSize().height-(margeInit-10)-(margeInit/2)-i);
         }
         
         g.setStroke(new BasicStroke(4));
@@ -149,8 +152,8 @@ public class GMapEucli extends JComponent{
         int size = listePoints.size();
         for(i = 0; (i+1)<size; i++){
             //g.drawLine((int)(liste.get(i).getX()), (int)(liste.get(i).getY()), (int)(liste.get(i+1).getX()), (int)(liste.get(i+1).getY()));
-            System.out.println(listePoints.get(i).getX()+" "+listePoints.get(i).getY());
-            System.out.println(listePointsConvertis.get(i).getX()+" "+listePointsConvertis.get(i).getY());
+            System.out.println("point de base : x=" + listePoints.get(i).getX()+" y="+listePoints.get(i).getY());
+            System.out.println("point converti : x=" + listePointsConvertis.get(i).getX()+" y="+listePointsConvertis.get(i).getY());
             g.drawOval((int)(listePointsConvertis.get(i).getX())-(diametre/2), (int)(this.getPreferredSize().height - listePointsConvertis.get(i).getY())-(diametre/2), diametre, diametre);
         }
         System.out.println(listePoints.get(i).getX()+" "+listePoints.get(i).getY());

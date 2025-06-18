@@ -27,10 +27,10 @@ public class TestComponents extends JFrame {
         mainPanel.setLayout(new GridBagLayout());
         GridBagConstraints gc = new GridBagConstraints();
         GMapEucli map = new GMapEucli(g);
-        var jsp = DistanceTable.table(g);
+        //var jsp = DistanceTable.table(g);
         
         gc.gridx = 0; gc.gridy = 0;
-        mainPanel.add(jsp, gc);
+        // mainPanel.add(jsp, gc);
         
         gc.gridx = 1;
         mainPanel.add(map, gc);
