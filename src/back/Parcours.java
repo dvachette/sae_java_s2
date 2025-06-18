@@ -5,7 +5,6 @@
 package back;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -20,10 +19,14 @@ public class Parcours<T extends Point> {
     private double length;
     private ArrayList<T> path;
     public Graph<T> graph;
+    private static Parcours<?> meilleurGlouton;
+    private static Parcours<?> meilleurInsertion;
 
     public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
+        meilleurGlouton = null;
+        meilleurInsertion = null;
     }
 
     public void setGraph(Graph<T> graph) {
@@ -145,6 +148,7 @@ public class Parcours<T extends Point> {
                 best = current;
             }
         }
+        meilleurGlouton = best;
         return best;
     }
 
@@ -163,6 +167,7 @@ public class Parcours<T extends Point> {
                 best = current;
             }
         }
+        meilleurInsertion = best;
         return best;
     }
 
@@ -172,16 +177,23 @@ public class Parcours<T extends Point> {
         * @return
     */
 
-    public static <T extends Point> Parcours<T> MeilleurAll(Graph<T> g){
-        Random rng = new Random();
-        List<T> pointsList = new ArrayList<>(g.getPoints().values());
-        T start = pointsList.get(rng.nextInt(pointsList.size()));
-        Parcours<T> best = MeilleurInsertion(g, start);
-        Parcours<T> current = MeilleurGlouton(g, start);
-        if (current.getLength() < best.getLength()) {
-            best = current;
+    public static <T extends Point> Parcours<T> MeilleurAll(Graph<T> g, T start) {
+        @SuppressWarnings("unchecked")
+        Parcours<T> glouton = (Parcours<T>) meilleurGlouton;
+        @SuppressWarnings("unchecked")
+        Parcours<T> insertion = (Parcours<T>) meilleurInsertion;
+
+        if (glouton == null) {
+            glouton = MeilleurGlouton(g, start);
+            meilleurGlouton = glouton;
         }
-        return best;
+        if (insertion == null) {
+            insertion = MeilleurInsertion(g, start);
+            meilleurInsertion = insertion;
+        }
+
+        // Compare les deux et retourne le meilleur
+        return (glouton.getLength() < insertion.getLength()) ? glouton : insertion;
     }
 
 

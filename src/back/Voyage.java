@@ -173,7 +173,7 @@ public class Voyage {
             Graph<T> graph = parcours.getGraph();
             Parcours<T> MeilleurGlouton = Parcours.MeilleurGlouton(graph, graph.getPoint(1));
             Parcours<T> MeilleurInsertion = Parcours.MeilleurInsertion(graph, graph.getPoint(1));
-            Parcours<T> MeilleurAll = Parcours.MeilleurAll(graph);
+            Parcours<T> MeilleurAll = Parcours.MeilleurAll(graph, graph.getPoint(1));
             file.write(filename + ";" + MeilleurGlouton.getLength() + ";" + MeilleurInsertion.getLength() + ";" + MeilleurAll.getLength() + "\n");
             file.close();
         }
