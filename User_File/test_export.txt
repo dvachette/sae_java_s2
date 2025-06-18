@@ -1,8 +1,0 @@
-NAME : Test Voyage
-TYPE : TSP
-COMMENT : Test Comment
-DIMENSION : 10
-EDGE_WEIGHT_TYPE : Edge Weight Format
-DISPLAY_DATA_TYPE : Display Type
-NODE_COORD_SECTION
-EOF

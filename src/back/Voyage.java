@@ -125,7 +125,7 @@ public class Voyage {
                 }
                 majCsv(filePath, parcours);
             }
-            if (edgeWeightFormat.equalsIgnoreCase("GEO")) {
+            else if (edgeWeightFormat.equalsIgnoreCase("GEO")) {
                 for (int i = 0; i < parcours.getPath().size(); i++) {
                     PointGeographique point = (PointGeographique) parcours.getPath().get(i);
                     file.write((i + 1) + " " + point.getLatitude() + " " + point.getLongitude() + "\n");
@@ -167,12 +167,12 @@ public class Voyage {
 
     public <T extends Point> void majCsv(String filepath, Parcours<T> parcours){
         try {
-            FileWriter file = new FileWriter("ResultatX_Y.csv");
+            FileWriter file = new FileWriter("ResultatX_Y.csv", true);
             String[] parts = filepath.split("/");
             String filename = parts[parts.length - 1];
             Graph<T> graph = parcours.getGraph();
-            Parcours<T> MeilleurGlouton = Parcours.MeilleurGlouton(graph, graph.getPoint(0));
-            Parcours<T> MeilleurInsertion = Parcours.MeilleurInsertion(graph, graph.getPoint(0));
+            Parcours<T> MeilleurGlouton = Parcours.MeilleurGlouton(graph, graph.getPoint(1));
+            Parcours<T> MeilleurInsertion = Parcours.MeilleurInsertion(graph, graph.getPoint(1));
             Parcours<T> MeilleurAll = Parcours.MeilleurAll(graph);
             file.write(filename + ";" + MeilleurGlouton.getLength() + ";" + MeilleurInsertion.getLength() + ";" + MeilleurAll.getLength() + "\n");
             file.close();
