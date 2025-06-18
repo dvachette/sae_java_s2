@@ -35,6 +35,7 @@ public class SAE_G3S2E2 {
         Graph<PointEuclidien> voyageGraph = Graph.randomPointSet(10);
         Parcours<PointEuclidien> parcours = voyageGraph.parcoursGlouton();
         voyageGraph.getPoint(0);
+        voyage.setParcours(parcours);
         filePath = "sae_java_s2/User_File/test_voyage.txt";
         voyage.exportToFile(filePath, parcours);
         System.out.println("Voyage exported to " + filePath);

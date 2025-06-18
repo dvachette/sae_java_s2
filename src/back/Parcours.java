@@ -5,6 +5,7 @@
 package back;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -18,11 +19,22 @@ public class Parcours<T extends Point> {
 
     private double length;
     private ArrayList<T> path;
+    public Graph<T> graph;
 
     public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
     }
+
+    public void setGraph(Graph<T> graph) {
+        this.graph = graph;
+    }
+
+    public Graph<T> getGraph() {
+        return graph;
+    }
+
+
 @SuppressWarnings({ "rawtypes", "unchecked" })
 
     /**
@@ -124,11 +136,11 @@ public class Parcours<T extends Point> {
      * @return 
      */
 
-    @SuppressWarnings("rawtypes")
-    public static Parcours MeilleurGlouton(Graph<Point> g, Point start) {
-        Parcours best = parcoursGlouton(g, start);
-        for (Point p : g.getPoints().values()) {
-            Parcours current = parcoursGlouton(g, p);
+    @SuppressWarnings("unchecked")
+    public static <T extends Point> Parcours<T> MeilleurGlouton(Graph<T> g, T start) {
+        Parcours<T> best = (Parcours<T>) parcoursGlouton(g, start);
+        for (T p : g.getPoints().values()) {
+            Parcours<T> current = (Parcours<T>) parcoursGlouton(g, p);
             if (current.getLength() < best.getLength()) {
                 best = current;
             }
@@ -142,17 +154,17 @@ public class Parcours<T extends Point> {
      * @return
      */
 
-     @SuppressWarnings("rawtypes")
-    public static Parcours MeilleurInsertion(Graph<Point> g, Point start) {
-        Parcours best = parcoursInsertion(g, start);
-        for (Point p : g.getPoints().values()) {
-            Parcours current = parcoursInsertion(g, p);
+    @SuppressWarnings("unchecked")
+    public static <T extends Point> Parcours<T> MeilleurInsertion(Graph<T> g, T start) {
+        Parcours<T> best = (Parcours<T>) parcoursInsertion(g, start);
+        for (T p : g.getPoints().values()) {
+            Parcours<T> current = (Parcours<T>) parcoursInsertion(g, p);
             if (current.getLength() < best.getLength()) {
                 best = current;
             }
         }
         return best;
-     }
+    }
 
     /**
         * @author Ethan 
@@ -160,12 +172,12 @@ public class Parcours<T extends Point> {
         * @return
     */
 
-    @SuppressWarnings("rawtypes")
-    public static Parcours MeilleurAll(Graph<Point> g){
+    public static <T extends Point> Parcours<T> MeilleurAll(Graph<T> g){
         Random rng = new Random();
-        Point start = g.getPoints().get(rng.nextInt(0, g.getPoints().size()));
-        Parcours best = MeilleurInsertion(g, start);
-        Parcours current = MeilleurGlouton(g, start);
+        List<T> pointsList = new ArrayList<>(g.getPoints().values());
+        T start = pointsList.get(rng.nextInt(pointsList.size()));
+        Parcours<T> best = MeilleurInsertion(g, start);
+        Parcours<T> current = MeilleurGlouton(g, start);
         if (current.getLength() < best.getLength()) {
             best = current;
         }

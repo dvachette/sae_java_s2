@@ -19,6 +19,7 @@ public class Voyage {
     protected String typeCoordinate;
     protected String displayType;
     protected String edgeWeightFormat;
+    protected Parcours <? extends Point> parcours;
 
 
     public Voyage(){
@@ -29,6 +30,7 @@ public class Voyage {
         this.typeCoordinate = "";
         this.displayType = "";
         this.edgeWeightFormat = "";
+        this.parcours = null;
     }
 
     public Voyage(String name, String type, String comment, int dimension, String typeCoordinate, String displayType, String edgeWeightFormat) {
@@ -39,6 +41,10 @@ public class Voyage {
         this.typeCoordinate = typeCoordinate;
         this.displayType = displayType;
         this.edgeWeightFormat = edgeWeightFormat;
+    }
+
+    public void setParcours(Parcours<? extends Point> parcours) {
+        this.parcours = parcours;
     }
     
     public String getName() {
@@ -102,7 +108,7 @@ public class Voyage {
         return "Voyage{" + "name=" + name + ", type=" + type + ", comment=" + comment + ", dimension=" + dimension + ", typeCoordinate=" + typeCoordinate + ", displayType=" + displayType + ", edgeWeightFormat=" + edgeWeightFormat + '}';
     }
 
-        public <T extends Point> void exportToFile(String filePath, Parcours<T> parcours) {
+    public <T extends Point> void exportToFile(String filePath, Parcours<T> parcours) {
         try {
             FileWriter file = new FileWriter(filePath);
             file.write("NAME : " + name + "\n");
@@ -117,12 +123,14 @@ public class Voyage {
                     PointEuclidien point = (PointEuclidien) parcours.getPath().get(i);
                     file.write((i + 1) + " " + point.getX() + " " + point.getY() + "\n");
                 }
+                majCsv(filePath, parcours);
             }
             if (edgeWeightFormat.equalsIgnoreCase("GEO")) {
                 for (int i = 0; i < parcours.getPath().size(); i++) {
                     PointGeographique point = (PointGeographique) parcours.getPath().get(i);
                     file.write((i + 1) + " " + point.getLatitude() + " " + point.getLongitude() + "\n");
                 }
+                majCsv(filePath, parcours);
             }
             else {
                 file.close();
@@ -155,6 +163,45 @@ public class Voyage {
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             dialog.setVisible(true);
         }
+    }
+
+    public <T extends Point> void majCsv(String filepath, Parcours<T> parcours){
+        try {
+            FileWriter file = new FileWriter("ResultatX_Y.csv");
+            String[] parts = filepath.split("/");
+            String filename = parts[parts.length - 1];
+            Graph<T> graph = parcours.getGraph();
+            Parcours<T> MeilleurGlouton = Parcours.MeilleurGlouton(graph, graph.getPoint(0));
+            Parcours<T> MeilleurInsertion = Parcours.MeilleurInsertion(graph, graph.getPoint(0));
+            Parcours<T> MeilleurAll = Parcours.MeilleurAll(graph);
+            file.write(filename + ";" + MeilleurGlouton.getLength() + ";" + MeilleurInsertion.getLength() + ";" + MeilleurAll.getLength() + "\n");
+            file.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'ouverture du fichier pour écriture.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Unsupported edge weight format: " + edgeWeightFormat);
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+
     }
 }
 
