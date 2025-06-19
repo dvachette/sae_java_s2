@@ -127,7 +127,7 @@ public class GMapEucli extends JComponent{
     @Override
     protected void paintComponent(Graphics gr){
         Graphics2D g = (Graphics2D)(gr);
-        g.setColor(Color.cyan);
+        g.setColor(Color.white);
         g.fillRect(0, 0, this.getPreferredSize().width, this.getPreferredSize().height);
         
         g.setColor(Color.gray);
@@ -146,6 +146,15 @@ public class GMapEucli extends JComponent{
            g.drawLine((margeInit-10)-5, this.getPreferredSize().height-(margeInit-10)-(margeInit/2)-i, (margeInit-10)+5, this.getPreferredSize().height-(margeInit-10)-(margeInit/2)-i);
         }
         
+        g.drawString(scaleX[1]+"", margeInit-20+(margeInit/2), this.getPreferredSize().height-margeInit+25);
+        
+        this.paintPoints(gr);
+        
+    }
+    
+    protected void paintPoints(Graphics gr){
+        Graphics2D g = (Graphics2D)(gr);
+        g.setColor(Color.black);
         g.setStroke(new BasicStroke(4));
         int diametre = 1;
         int i;
@@ -155,9 +164,21 @@ public class GMapEucli extends JComponent{
             System.out.println("point de base : x=" + listePoints.get(i).getX()+" y="+listePoints.get(i).getY());
             System.out.println("point converti : x=" + listePointsConvertis.get(i).getX()+" y="+listePointsConvertis.get(i).getY());
             g.drawOval((int)(listePointsConvertis.get(i).getX())-(diametre/2), (int)(this.getPreferredSize().height - listePointsConvertis.get(i).getY())-(diametre/2), diametre, diametre);
+            g.drawString(listePointsConvertis.get(i).getId()+"", (int)(listePointsConvertis.get(i).getX()+diametre*4), (int) (this.getPreferredSize().height - listePointsConvertis.get(i).getY())-(diametre));
         }
         System.out.println(listePoints.get(i).getX()+" "+listePoints.get(i).getY());
         System.out.println(listePointsConvertis.get(i).getX()+" "+listePointsConvertis.get(i).getY());
         g.drawOval((int)(listePointsConvertis.get(i).getX())-(diametre/2), (int)(this.getPreferredSize().height - listePointsConvertis.get(i).getY())-(diametre/2), diametre, diametre);
+        g.drawString(listePointsConvertis.get(i).getId()+"", (int)(listePointsConvertis.get(i).getX()+diametre*4), (int) (this.getPreferredSize().height - listePointsConvertis.get(i).getY())-(diametre));
+        
+    }
+    
+    protected void paintParcours(Graphics gr){
+        Graphics2D g = (Graphics2D)(gr);
+        g.setColor(Color.gray); //tracage du rectangle gris de fond pour couvrir les points déjà tracés
+        g.fillRect(margeInit-10+(margeInit/2), margeInit-10-(margeInit/2), this.getPreferredSize().width-(margeInit*2)+20, this.getPreferredSize().height-(margeInit*2)+20);
+        
+        
+        //tracer les traits entre parcours, param parcours ?
     }
 }
