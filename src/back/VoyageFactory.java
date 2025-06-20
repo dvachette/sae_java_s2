@@ -75,17 +75,11 @@ public class VoyageFactory {
                     edgeWeightFormat = parts[1].trim();
                 }
             }
+            System.out.println("typeCoordinate lu : '" + typeCoordinate + "'");
            
 
             if (typeCoordinate.equalsIgnoreCase("EUC_2D")) {
-                VoyageEucli voyage = new VoyageEucli();
-                voyage.setName(name);
-                voyage.setType(type);
-                voyage.setComment(comment);
-                voyage.setDimension(dimension);
-                voyage.setTypeCoordinate(typeCoordinate);
-                voyage.setDisplayType(displayType);
-                voyage.setEdgeWeightFormat(edgeWeightFormat);
+                VoyageEucli voyage = new VoyageEucli(name, type, comment, dimension, typeCoordinate, displayType, edgeWeightFormat);
                 // Initialize the graph for Euclidean points
                 line = scanner.nextLine();
                 Graph<PointEuclidien> gr = new Graph<>();

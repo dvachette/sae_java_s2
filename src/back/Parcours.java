@@ -5,6 +5,7 @@
 package back;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -31,6 +32,13 @@ public class Parcours<T extends Point> {
     public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
+        meilleurGlouton = null;
+        meilleurInsertion = null;
+    }
+
+    public Parcours() {
+        this.length = 0;
+        this.path = new ArrayList<>();
         meilleurGlouton = null;
         meilleurInsertion = null;
     }
@@ -127,37 +135,60 @@ public class Parcours<T extends Point> {
 
     public static Parcours parcoursInsertion(Graph g, Point start) {
         TreeMap<Integer, Point> points = g.getPoints();
-        ArrayList<Point> pool = new ArrayList<>(points.values());
+        // Utilisation d'un HashSet pour des suppressions rapides
+        HashSet<Point> pool = new HashSet<>(points.values());
         ArrayList<Point> path = new ArrayList<>();
-        Point current = start;
-        path.add(current);
+        path.add(start);
+        pool.remove(start);
         double length = 0;
 
-        while (!pool.isEmpty()) {
-            double minDistance = Double.MAX_VALUE;
-            Point nextPoint = null;
-            int insertIndex = -1;
+        // Ajoute le point le plus proche du départ pour initialiser le chemin
+        if (!pool.isEmpty()) {
+            Point closest = null;
+            double minDist = Double.MAX_VALUE;
+            for (Point p : pool) {
+                double dist = g.getDistanceMatrix(start.getId() - 1, p.getId() - 1);
+                if (dist < minDist) {
+                    minDist = dist;
+                    closest = p;
+                }
+            }
+            path.add(closest);
+            pool.remove(closest);
+            length += minDist;
+        }
 
-            for (int i = 0; i < path.size(); i++) {
-                Point p1 = path.get(i);
-                Point p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
-                for (Point candidate : pool) {
-                    double distance = g.getDistanceMatrix(p1.getId() - 1, candidate.getId() - 1) + g.getDistanceMatrix(candidate.getId() - 1, p2.getId() - 1) - g.getDistanceMatrix(p1.getId() - 1, p2.getId() - 1);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        nextPoint = candidate;
-                        insertIndex = i + 1;
+        // Insertion des autres points
+        while (!pool.isEmpty()) {
+            double bestIncrease = Double.MAX_VALUE;
+            Point bestPoint = null;
+            int bestPos = -1;
+
+            for (Point candidate : pool) {
+                // Cherche la meilleure position d'insertion pour ce candidat
+                for (int i = 0; i < path.size(); i++) {
+                    Point p1 = path.get(i);
+                    Point p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
+                    double increase = g.getDistanceMatrix(p1.getId() - 1, candidate.getId() - 1)
+                                    + g.getDistanceMatrix(candidate.getId() - 1, p2.getId() - 1)
+                                    - g.getDistanceMatrix(p1.getId() - 1, p2.getId() - 1);
+                    if (increase < bestIncrease) {
+                        bestIncrease = increase;
+                        bestPoint = candidate;
+                        bestPos = i + 1;
                     }
                 }
             }
 
-            if (nextPoint != null) {
-                length += minDistance;
-                path.add(insertIndex, nextPoint);
-                pool.remove(nextPoint);
-            }
+            // Ajoute le meilleur point à la meilleure position
+            path.add(bestPos, bestPoint);
+            pool.remove(bestPoint);
+            length += bestIncrease;
         }
-        length += g.getDistanceMatrix(path.getLast().getId() - 1, path.getFirst().getId() - 1 ); // Return to start
+
+        // Ferme le cycle
+        length += g.getDistanceMatrix(path.get(path.size() - 1).getId() - 1, path.get(0).getId() - 1);
+        // System.out.println("Parcours Insertion: " + path);
         return new Parcours(length, path);
     }
 
@@ -197,6 +228,7 @@ public class Parcours<T extends Point> {
             }
         }
         meilleurInsertion = best;
+        System.out.println("Meilleur Insertion: " + best);
         return best;
     }
 
@@ -233,6 +265,16 @@ public class Parcours<T extends Point> {
 
     public double getLength() {
         return length;
+    }
+
+    /**
+     * @author ethan
+     * @param index
+     * @return get le point à l'index spécifié dans le parcours
+     */
+
+    public Point getPoint(int index) {
+        return path.get(index);
     }
 
     /**

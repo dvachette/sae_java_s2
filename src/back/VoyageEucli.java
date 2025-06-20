@@ -14,8 +14,8 @@ public class VoyageEucli extends Voyage {
      * Initialise un graphe vide de type PointEuclidien
      */
 
-    public VoyageEucli() {
-        super();
+    public VoyageEucli(String name, String type, String comment, int dimension, String typeCoordinate, String displayType, String edgeWeightFormat) {
+        super(name, type, comment, dimension, typeCoordinate, displayType, edgeWeightFormat);
         this.graph = new Graph<>();
     }
 

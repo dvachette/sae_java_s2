@@ -20,6 +20,7 @@ public class Voyage {
     protected String displayType;
     protected String edgeWeightFormat;
     protected Parcours <? extends Point> parcours;
+    public static int idVoyage = 1;
 
     /**
      * @author Ethan
@@ -36,6 +37,7 @@ public class Voyage {
         this.displayType = "";
         this.edgeWeightFormat = "";
         this.parcours = null;
+        idVoyage++;
     }
 
     /**
@@ -237,14 +239,14 @@ public class Voyage {
             file.write("EDGE_WEIGHT_TYPE : " + edgeWeightFormat + "\n");
             file.write("DISPLAY_DATA_TYPE : " + displayType + "\n");
             file.write("NODE_COORD_SECTION\n");
-            if (edgeWeightFormat.equalsIgnoreCase("EUC_2D")) {
+            if (typeCoordinate.equalsIgnoreCase("EUC_2D")) {
                 for (int i = 0; i < parcours.getPath().size(); i++) {
                     PointEuclidien point = (PointEuclidien) parcours.getPath().get(i);
                     file.write((i + 1) + " " + point.getX() + " " + point.getY() + "\n");
                 }
                 majCsv(filePath, parcours);
             }
-            else if (edgeWeightFormat.equalsIgnoreCase("GEO")) {
+            else if (typeCoordinate.equalsIgnoreCase("GEO")) {
                 for (int i = 0; i < parcours.getPath().size(); i++) {
                     PointGeographique point = (PointGeographique) parcours.getPath().get(i);
                     file.write((i + 1) + " " + point.getLatitude() + " " + point.getLongitude() + "\n");
@@ -276,6 +278,31 @@ public class Voyage {
             dialog.setType(java.awt.Window.Type.UTILITY);
             dialog.setTitle("Error");
             JLabel label = new JLabel("Unsupported edge weight format: " + edgeWeightFormat);
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+    }
+
+    public <T extends Point> void exportforEval(Parcours<T> parcours){
+        try {
+            String filepath = "Voyage" + idVoyage + ".txt";
+            FileWriter file = new FileWriter(filepath);
+            int n = parcours.getPath().size();
+            for(int i = 0; i < n; i++){
+                int supposed_id = parcours.getPoint(i).getId();
+                file.write(supposed_id + "\n");
+            }
+            file.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'ouverture du fichier pour écriture.");
             dialog.add(label);
             dialog.setSize(400, 200);
             dialog.setLocationRelativeTo(null);
