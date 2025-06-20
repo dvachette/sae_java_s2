@@ -21,6 +21,11 @@ public class Voyage {
     protected String edgeWeightFormat;
     protected Parcours <? extends Point> parcours;
 
+    /**
+     * @author Ethan
+     * @brief Constructeur par défaut
+     */
+
 
     public Voyage(){
         this.name = "";
@@ -33,6 +38,18 @@ public class Voyage {
         this.parcours = null;
     }
 
+    /**
+     * @author Ethan
+     * @brief Constructeur avec paramètres
+     * @param name Le nom du voyage
+     * @param type Le type de voyage
+     * @param comment Un commentaire sur le voyage
+     * @param dimension La dimension du voyage
+     * @param typeCoordinate Le type de coordonnées (EUC_2D, GEO, etc.)
+     * @param displayType Le type d'affichage des données
+     * @param edgeWeightFormat Le format du poids des arêtes
+     */
+
     public Voyage(String name, String type, String comment, int dimension, String typeCoordinate, String displayType, String edgeWeightFormat) {
         this.name = name;
         this.type = type;
@@ -43,70 +60,172 @@ public class Voyage {
         this.edgeWeightFormat = edgeWeightFormat;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le parcours
+     * @param parcours
+     */
+
     public void setParcours(Parcours<? extends Point> parcours) {
         this.parcours = parcours;
     }
+    /**
+     * @author Ethan
+     * @brief Getter pour le nom du parcours
+     * @return String
+     */
     
     public String getName() {
         return name;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le nom du parcours
+     * @param name Le nom du parcours
+     */
+
     public void setName(String name) {
         this.name = name;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour le type du parcours
+     * @return String
+     */
 
     public String getType() {
         return type;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le type du parcours
+     * @param type Le type du parcours
+     */
+
     public void setType(String type) {
         this.type = type;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour le commentaire du parcours
+     * @return String
+     */
 
     public String getComment() {
         return comment;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le commentaire du parcours
+     * @param comment Le commentaire du parcours
+     */
+
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour la dimension du parcours
+     * @return int
+     */
 
     public int getDimension() {
         return dimension;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour la dimension du parcours
+     * @param dimension La dimension du parcours
+     */
+
     public void setDimension(int dimension) {
         this.dimension = dimension;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour le type de coordonnées du parcours
+     * @return String
+     */
 
     public String getTypeCoordinate() {
         return typeCoordinate;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le type de coordonnées du parcours
+     * @param typeCoordinate Le type de coordonnées du parcours
+     */
+
     public void setTypeCoordinate(String typeCoordinate) {
         this.typeCoordinate = typeCoordinate;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour le type d'affichage des données du parcours
+     * @return String
+     */
 
     public String getDisplayType() {
         return displayType;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le type d'affichage des données du parcours
+     * @param displayType Le type d'affichage des données du parcours
+     */
+
     public void setDisplayType(String displayType) {
         this.displayType = displayType;
     }
+
+    /**
+     * @author Ethan
+     * @brief Getter pour le format du poids des arêtes du parcours
+     * @return String
+     */
 
     public String getEdgeWeightFormat() {
         return edgeWeightFormat;
     }
 
+    /**
+     * @author Ethan
+     * @brief Setter pour le format du poids des arêtes du parcours
+     * @param edgeWeightFormat Le format du poids des arêtes du parcours
+     */
+
     public void setEdgeWeightFormat(String edgeWeightFormat) {
         this.edgeWeightFormat = edgeWeightFormat;
     }
+
+    /**
+     * @author Ethan
+     * @brief Méthode toString pour afficher les informations du voyage
+     * @return Une chaîne de caractères représentant le voyage
+     */
 
     @Override
     public String toString() {
         return "Voyage{" + "name=" + name + ", type=" + type + ", comment=" + comment + ", dimension=" + dimension + ", typeCoordinate=" + typeCoordinate + ", displayType=" + displayType + ", edgeWeightFormat=" + edgeWeightFormat + '}';
     }
+
+    /**
+     * @author Ethan
+     * @brief Méthode pour exporter le parcours vers un fichier
+     * @param filePath Le chemin du fichier où exporter le parcours
+     * @param parcours Le parcours à exporter
+     */
 
     public <T extends Point> void exportToFile(String filePath, Parcours<T> parcours) {
         try {
@@ -164,6 +283,13 @@ public class Voyage {
             dialog.setVisible(true);
         }
     }
+
+    /**
+     * @author Ethan
+     * @brief Méthode pour mettre à jour le fichier CSV avec les résultats du parcours
+     * @param filepath Le chemin du fichier CSV
+     * @param parcours Le parcours à ajouter au fichier CSV
+     */
 
     public <T extends Point> void majCsv(String filepath, Parcours<T> parcours){
         try {

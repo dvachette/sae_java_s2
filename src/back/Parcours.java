@@ -22,6 +22,12 @@ public class Parcours<T extends Point> {
     private static Parcours<?> meilleurGlouton;
     private static Parcours<?> meilleurInsertion;
 
+    /**
+     * @author donat
+     * @param length
+     * @param path
+     */
+
     public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
@@ -29,9 +35,19 @@ public class Parcours<T extends Point> {
         meilleurInsertion = null;
     }
 
+    /**
+     * @author donat
+     * @param graph
+     */
+
     public void setGraph(Graph<T> graph) {
         this.graph = graph;
     }
+
+    /**
+     * @author donat
+     * @return Graph<T>
+     */
 
     public Graph<T> getGraph() {
         return graph;
@@ -47,23 +63,36 @@ public class Parcours<T extends Point> {
      * @return 
      */
     public static Parcours parcoursGlouton( Graph g, Point start) {
-        TreeMap<Integer, Point> points = g.getPoints();
-        ArrayList<Point> pool = new ArrayList<>(points.values());
-        ArrayList<Point> path = new ArrayList<>();
-        Point current = start;
-        path.add(current);
-        double length = 0;
-        Point nextPoint;
-        while (!pool.isEmpty()) { 
-            nextPoint = current.closest(pool);
-            length += nextPoint.distanceOf(current);
-            path.add(nextPoint);
-            pool.remove(nextPoint);
-            current = nextPoint;
+    int n = g.getPoints().size();
+    boolean[] visited = new boolean[n];
+    ArrayList<Point> points = new ArrayList<>(g.getPoints().values());
+    ArrayList<Point> path = new ArrayList<>(n);
+    Point current = start;
+    path.add(current);
+    visited[current.getId() - 1] = true;
+    double length = 0;
+
+    for (int step = 1; step < n; step++) {
+        double minDist = Double.MAX_VALUE;
+        int nextIdx = -1;
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                double dist = g.getDistanceMatrix(current.getId() - 1, i);
+                if (dist < minDist) {
+                    minDist = dist;
+                    nextIdx = i;
+                }
+            }
         }
-        length += current.distanceOf(path.get(0)); // Return to start
-        return new Parcours(length, path);
+        visited[nextIdx] = true;
+        Point next = points.get(nextIdx);
+        length += minDist;
+        path.add(next);
+        current = next;
     }
+    length += g.getDistanceMatrix(current.getId() - 1, start.getId() - 1);
+    return new Parcours(length, path);
+}
     /**
      * @author donat
      * @param g
@@ -113,7 +142,7 @@ public class Parcours<T extends Point> {
                 Point p1 = path.get(i);
                 Point p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
                 for (Point candidate : pool) {
-                    double distance = p1.distanceOf(candidate) + candidate.distanceOf(p2) - p1.distanceOf(p2);
+                    double distance = g.getDistanceMatrix(p1.getId() - 1, candidate.getId() - 1) + g.getDistanceMatrix(candidate.getId() - 1, p2.getId() - 1) - g.getDistanceMatrix(p1.getId() - 1, p2.getId() - 1);
                     if (distance < minDistance) {
                         minDistance = distance;
                         nextPoint = candidate;
@@ -128,7 +157,7 @@ public class Parcours<T extends Point> {
                 pool.remove(nextPoint);
             }
         }
-        length += path.getLast().distanceOf(path.getFirst()); // Return to start
+        length += g.getDistanceMatrix(path.getLast().getId() - 1, path.getFirst().getId() - 1 ); // Return to start
         return new Parcours(length, path);
     }
 
@@ -196,14 +225,31 @@ public class Parcours<T extends Point> {
         return (glouton.getLength() < insertion.getLength()) ? glouton : insertion;
     }
 
+    /**
+     * @author donat
+     * 
+     * @return double représentant la longueur du parcours
+     */
 
     public double getLength() {
         return length;
     }
 
+    /**
+     * @author donat
+     * 
+     * @return ArrayList<T> représentant le parcours
+     */
+
     public ArrayList<T> getPath() {
         return path;
     }
+
+    /**
+     * @author donat
+     * 
+     * @return Parcours<T> représentant le parcours
+     */
 
     @Override
     public String toString() {

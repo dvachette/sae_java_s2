@@ -15,15 +15,34 @@ public class PointGeographique implements Point {
     private int id;
     private double latitude, longitude;
 
+    /**
+     * @author donat
+     * @brief Constructeur par défaut
+     * @param latitude La latitude du point géographique
+     * @param longitude La longitude du point géographique
+     * @param id L'identifiant du point géographique
+     */
+
     public PointGeographique(double latitude, double longitude, int id) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    /**
+     * @author donat
+     * @brief getter pour l'identifiant du point géographique
+     * @return L'identifiant du point géographique
+     */
 
     public int getId() {
         return id;
     }
+
+    /**
+     * @author donat
+     * @brief Setter pour l'identifiant du point géographique
+     * @param id L'identifiant du point géographique
+     */
 
     public void setId(int id) {
         this.id = id;
@@ -82,19 +101,17 @@ public class PointGeographique implements Point {
     }
     
         @Override
-    public Point closest(ArrayList<? extends Point> points) {
-        double miniDist = this.distanceOf(points.getFirst());
-        Point closest = points.getFirst();
-        for (Point p : points) {
-            if (!(p instanceof PointGeographique)) {
-                return null;
-            }
-            if (miniDist > this.distanceOf(p)) {
-                miniDist = this.distanceOf(p);
-                closest = p;
+    public Point closest(ArrayList<? extends Point> points, Graph<?> graph) {
+        Point closestPoint = null;
+        double minDistance = Double.MAX_VALUE;
+        for (Point point : points) {
+            double distance = graph.getDistanceMatrix(this.getId() - 1, point.getId() - 1);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestPoint = point;
             }
         }
-        return closest;
+        return closestPoint;
     }
     
 }
