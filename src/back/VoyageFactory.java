@@ -14,9 +14,24 @@ public class VoyageFactory {
 
     private String chemin;
 
+    /**
+     * @author Ethan
+     * @brief Constructeur de la classe VoyageFactory
+     * * @description Ce constructeur initialise le chemin du fichier à partir duquel le voyage sera créé.
+     * @param chemin
+     */
+
     public VoyageFactory(String chemin) {
         this.chemin = chemin;
     }
+
+    /**
+     * @author Ethan
+     * @brief Méthode pour créer un voyage à partir d'un fichier
+     * @return Voyage
+     * @throws FileNotFoundException
+     * @description Cette méthode lit le fichier spécifié par le chemin et crée un objet Voyage en fonction des données contenues dans le fichier.
+     */
 
     public Voyage createVoyage() {
         String type = "";
