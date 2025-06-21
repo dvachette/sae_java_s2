@@ -22,6 +22,9 @@ public class SAE_G3S2E2 {
      */
     public static void main(String[] args) {
 
+        String filePath = "User_File/test1.txt";
+        // Test lecture de fichier
+
         Graph<PointEuclidien> graph = Graph.randomPointSet(10);
         System.out.println(graph.getPoint(2));
         System.out.println(graph.getPoint(4));
@@ -44,8 +47,13 @@ public class SAE_G3S2E2 {
         
         //test voyage
 
-        VoyageFactory voyageFactory = new VoyageFactory("User_File/test1.txt");
-        Voyage voyage = voyageFactory.createVoyage();
+        VoyageFactory voyageFactory = new VoyageFactory(filePath);
+        Voyage voyage = null;
+        try {
+            voyage = voyageFactory.createVoyage();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         if (voyage instanceof VoyageEucli) {
             VoyageEucli voyageEucli = (VoyageEucli) voyage;
             System.out.println("Voyage Euclidien: " + voyageEucli.getName());

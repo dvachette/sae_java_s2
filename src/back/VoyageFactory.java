@@ -5,8 +5,13 @@ package back;
  */
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+
 import java.io.IOException;
+
 import java.util.Scanner;
+
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 public class VoyageFactory {
 
@@ -27,31 +32,39 @@ public class VoyageFactory {
             
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
+            
             String line;
             while (scanner.hasNextLine()) {
                 line = scanner.nextLine();
-                if (line.trim().equals("NODE_COORD_SECTION")) {
+                if (line.trim().equalsIgnoreCase("NODE_COORD_SECTION")) {
                     break;
                 }
                 String[] parts = line.split(":");
-                if ((parts[0].trim()).equals("NAME")) {
+                if ((parts[0].trim()).equalsIgnoreCase("NAME")) {
                     name = parts[1].trim();
-                } else if ((parts[0].trim()).equals("TYPE")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("TYPE")) {
                     type = parts[1].trim();
-                } else if ((parts[0].trim()).equals("COMMENT")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("COMMENT")) {
                     comment = parts[1].trim();
-                } else if ((parts[0].trim()).equals("DIMENSION")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("DIMENSION")) {
                     dimension = Integer.parseInt(parts[1].trim());
-                } else if ((parts[0].trim()).equals("EDGE_WEIGHT_TYPE")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("EDGE_WEIGHT_TYPE")) {
                     typeCoordinate = parts[1].trim();
-                } else if ((parts[0].trim()).equals("DISPLAY_TYPE")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("DISPLAY_TYPE")) {
                     displayType = parts[1].trim();
-                } else if ((parts[0].trim()).equals("EDGE_WEIGHT_FORMAT")) {
+                }
+                else if ((parts[0].trim()).equalsIgnoreCase("EDGE_WEIGHT_FORMAT")) {
                     edgeWeightFormat = parts[1].trim();
                 }
             }
+           
 
-            if (typeCoordinate.equals("EUC_2D")) {
+            if (typeCoordinate.equalsIgnoreCase("EUC_2D")) {
                 VoyageEucli voyage = new VoyageEucli();
                 voyage.setName(name);
                 voyage.setType(type);
@@ -76,7 +89,7 @@ public class VoyageFactory {
                 scanner.close();
                 fileInputStream.close();
                 return voyage;
-            } else if (typeCoordinate.equals("GEO")) {
+            } else if (typeCoordinate.equalsIgnoreCase("GEO")) {
                 VoyageGeo voyage = new VoyageGeo();
                 voyage.setName(name);
                 voyage.setType(type);
@@ -85,7 +98,6 @@ public class VoyageFactory {
                 voyage.setTypeCoordinate(typeCoordinate);
                 voyage.setDisplayType(displayType);
                 voyage.setEdgeWeightFormat(edgeWeightFormat);
-                System.out.println("inside if");
 
                 line = scanner.nextLine();
                 Graph<PointGeographique> gr = new Graph<>();
@@ -106,7 +118,7 @@ public class VoyageFactory {
             } else {
                 scanner.close();
                 fileInputStream.close();
-                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); //TODO : We are expected to handle errors
+                throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); 
             }
     }
 }

@@ -167,8 +167,7 @@ public class Graph<T extends Point> {
         return new Parcours<>(length, path);
     }
     
-    
-    
+
     public Parcours<T> parcoursAleatoire() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         Random rng = new Random();
