@@ -75,8 +75,6 @@ public class VoyageFactory {
                     edgeWeightFormat = parts[1].trim();
                 }
             }
-            System.out.println("typeCoordinate lu : '" + typeCoordinate + "'");
-           
 
             if (typeCoordinate.equalsIgnoreCase("EUC_2D")) {
                 VoyageEucli voyage = new VoyageEucli(name, type, comment, dimension, typeCoordinate, displayType, edgeWeightFormat);
@@ -113,7 +111,6 @@ public class VoyageFactory {
                     int id = Integer.parseInt(parts[0]);
                     double x = Double.parseDouble(parts[1]);
                     double y = Double.parseDouble(parts[2]);
-                    System.out.printf("Adding point x = %f, y = %f \n", x, y);
                     gr.addPoint(new PointGeographique(x, y, id));
                     line = scanner.nextLine();
                 }

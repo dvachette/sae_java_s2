@@ -59,7 +59,6 @@ public class Graph<T extends Point> {
                 double dist = point1.distanceOf(point2);
                 distance_Matrix[i - 1][j - 1] = dist;
                 distance_Matrix[j - 1][i - 1] = dist; // Symétrie
-                System.err.println("Distance entre " + i + " et " + j + " : " + dist);
             }
         }
     }

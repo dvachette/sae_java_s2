@@ -188,7 +188,6 @@ public class Parcours<T extends Point> {
 
         // Ferme le cycle
         length += g.getDistanceMatrix(path.get(path.size() - 1).getId() - 1, path.get(0).getId() - 1);
-        // System.out.println("Parcours Insertion: " + path);
         return new Parcours(length, path);
     }
 
@@ -228,7 +227,6 @@ public class Parcours<T extends Point> {
             }
         }
         meilleurInsertion = best;
-        System.out.println("Meilleur Insertion: " + best);
         return best;
     }
 

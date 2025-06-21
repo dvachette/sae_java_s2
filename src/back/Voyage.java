@@ -286,15 +286,16 @@ public class Voyage {
         }
     }
 
-    public <T extends Point> void exportforEval(Parcours<T> parcours){
+    public <T extends Point> void exportforEval(Parcours<T> parcours, int i_voyage) {
         try {
-            String filepath = "Voyage" + idVoyage + ".txt";
+            String filepath = "sae_java_s2/Result_File/G3S2BE2/voyage" + i_voyage + ".txt";
             FileWriter file = new FileWriter(filepath);
             int n = parcours.getPath().size();
             for(int i = 0; i < n; i++){
                 int supposed_id = parcours.getPoint(i).getId();
                 file.write(supposed_id + "\n");
             }
+            this.majCsv(filepath, parcours);
             file.close();
         }
         catch (IOException e) {
@@ -303,6 +304,30 @@ public class Voyage {
             dialog.setType(java.awt.Window.Type.UTILITY);
             dialog.setTitle("Error");
             JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'ouverture du fichier pour écriture.");
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+        catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Unsupported edge weight format: " + edgeWeightFormat);
+            dialog.add(label);
+            dialog.setSize(400, 200);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            dialog.setVisible(true);
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            JDialog dialog = new JDialog();
+            dialog.setType(java.awt.Window.Type.UTILITY);
+            dialog.setTitle("Error");
+            JLabel label = new JLabel("Une Erreur Inconnue s'est produite lors de l'exportation du parcours.");
             dialog.add(label);
             dialog.setSize(400, 200);
             dialog.setLocationRelativeTo(null);
@@ -320,7 +345,7 @@ public class Voyage {
 
     public <T extends Point> void majCsv(String filepath, Parcours<T> parcours){
         try {
-            FileWriter file = new FileWriter("ResultatX_Y.csv", true);
+            FileWriter file = new FileWriter("sae_java_s2/Result_File/G3S2BE2/ResultatX_Y.csv", true);
             String[] parts = filepath.split("/");
             String filename = parts[parts.length - 1];
             Graph<T> graph = parcours.getGraph();
