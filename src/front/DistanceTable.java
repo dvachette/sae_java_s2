@@ -5,6 +5,8 @@
 package front;
 
 import back.Graph;
+import back.Point;
+import java.awt.Dimension;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
@@ -13,16 +15,42 @@ import javax.swing.table.TableColumnModel;
  *
  * @author donat
  */
-public class DistanceTable {
+public class DistanceTable extends JScrollPane {
 
-    public static JScrollPane table(Graph g) {
-        var dtm = new DistanceTableModel(g);
-        var dt = new JTable(dtm);
+    private DistanceTableModel model;
+    private JTable dt;
+
+    public DistanceTable() {
+        super();
+        initComponent();
+    }
+
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(400, 400);
+    }
+
+    private void initComponent() {
+
+        this.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        this.revalidate();
+    }
+
+    public void setGraph(Graph<? extends Point> g) {
+        model = new DistanceTableModel(g);
+
+        dt = new JTable();
+        dt.setPreferredSize(new Dimension(400, 400));
+        dt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel columnModel = dt.getColumnModel();
         for (int i = 0; i < columnModel.getColumnCount(); i++) {
             columnModel.getColumn(i).setMinWidth(30);
         }
-        dt.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        return new JScrollPane(dt, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        System.out.println("graph set");
+        dt.setColumnModel(columnModel);
+        dt.setModel(model);
+        add(dt);
+        this.revalidate();
     }
 }

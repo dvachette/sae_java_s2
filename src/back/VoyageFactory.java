@@ -4,6 +4,8 @@ package back;
  * @author Ethan
  */
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class VoyageFactory {
@@ -14,7 +16,7 @@ public class VoyageFactory {
         this.chemin = chemin;
     }
 
-    public Voyage createVoyage() {
+    public Voyage createVoyage() throws IllegalArgumentException, FileNotFoundException, IOException{
         String type = "";
         String name = "";
         String comment = "";
@@ -22,8 +24,7 @@ public class VoyageFactory {
         String typeCoordinate = "";
         String displayType = "";
         String edgeWeightFormat = "";
-
-        try {
+            
             FileInputStream fileInputStream = new FileInputStream(chemin);
             Scanner scanner = new Scanner(fileInputStream);
             String line;
@@ -107,9 +108,5 @@ public class VoyageFactory {
                 fileInputStream.close();
                 throw new IllegalArgumentException("Unsupported coordinate type: " + typeCoordinate); //TODO : We are expected to handle errors
             }
-        } catch (Exception e) {
-            e.printStackTrace(); // TODO : better error handling
-        }
-        return null;
     }
 }
