@@ -31,6 +31,7 @@ import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.WindowConstants;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -144,7 +145,7 @@ public class MainWindow extends JFrame {
         });
 
         buttonShowTravel.addActionListener((ActionEvent evt) -> {
-            showTravelToggleButtonActionPerformed(evt);
+            showTravelToggleButtonActionPerformed();
         });
         menuFile.add(menuFileExport);
 
@@ -208,7 +209,10 @@ public class MainWindow extends JFrame {
             try {
                 voyage = factory.createVoyage();
                 if (voyage instanceof VoyageEucli voyageEucli) {
+
                     euclidianMap.setMap(voyageEucli.getGraph());
+                    euclidianMap.setParcours(null);
+                    showTravelToggleButtonActionPerformed();
                     DistanceTableModel dtm = new DistanceTableModel(voyageEucli.getGraph());
                     tableDistanceTable.setModel(dtm);
                 }
@@ -260,24 +264,27 @@ public class MainWindow extends JFrame {
     }
 
     private void menuFileCloseActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+        this.voyage = null;
+        euclidianMap.setParcours(null);
+        euclidianMap.setMap(null);
+        tableDistanceTable.setModel(new DefaultTableModel());
     }
 
     private void comboAlgorithmChoiceActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+        showTravelToggleButtonActionPerformed();
     }
 
     private void editModeToggleButtonActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
     }
 
-    private void showTravelToggleButtonActionPerformed(ActionEvent evt) {
+    private void showTravelToggleButtonActionPerformed() {
 
         if (!(Objects.equals(voyage, null))) {
 
             if (voyage instanceof VoyageEucli voyageEucli) {
 
-                if (((JToggleButton) evt.getSource()).isSelected()) {
+                if (buttonShowTravel.isSelected()) {
 
                     Parcours<PointEuclidien> parcours = null;
                     switch ((String) this.comboAlgorithmChoice.getSelectedItem()) {

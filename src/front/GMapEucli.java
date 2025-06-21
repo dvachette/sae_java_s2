@@ -46,6 +46,11 @@ public class GMapEucli extends JComponent {
     }
 
     public void setMap(Graph<? extends Point> gr) {
+        if (Objects.equals(gr, null)) {
+            this.listePoints = null;
+            this.repaint();
+            return;
+        }
         ArrayList listeTemp = new ArrayList(gr.getPoints().values());
         this.listePoints = new ArrayList();
         for (int i = 0; i < listeTemp.size(); i++) {
@@ -131,7 +136,7 @@ public class GMapEucli extends JComponent {
             y = y * (scaleY[0]);
             y = this.getPreferredSize().height - y;
             y = y - margeY;
-            listePointsConvertis.add(new PointEuclidien(x, y, listePoints.get(i).getId())); // JE T'ADORE, TU A FAIT LES TRUCS COMME IL FAUT, GG !!!!!!!!!
+            listePointsConvertis.add(new PointEuclidien(x, y, listePoints.get(i).getId())); // JE T'ADORE, TU AS FAIT LES TRUCS COMME IL FAUT, GG !!!!!!!!!
         }
     }
 
