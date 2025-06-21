@@ -117,6 +117,7 @@ public class GMapEucli extends JComponent {
         System.out.println(scaleX[0] + " " + scaleX[1]);
         System.out.println(scaleY[0] + " " + scaleY[1]);
         System.out.println("Marge Y : " + margeY);
+        System.out.println("Marge X : " + margeX);
     }
 
     /**
@@ -204,12 +205,12 @@ public class GMapEucli extends JComponent {
             g.drawString("= " + unite, (int) ((this.getPreferredSize().width / 2) + 5), (int) (this.getPreferredSize().height - ((margeInit - 10) / 2) + 2));
 
             //affichage de l'origine en X
-            int origineX = (int) (scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) * scaleX[0]));
-            System.out.println("chiffre bizarre : " + (scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) * scaleX[0])));
+            int origineX = (int) (scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) / scaleX[0]));
+            System.out.println("chiffre bizarre : " +(scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) / scaleX[0])));
             g.drawString((int) (origineX) + "", margeInit, this.getPreferredSize().height - margeInit + 25);
 
             //affichage de l'origine en Y
-            int origineY = (int) (scaleY[1] - ((margeY - ((margeInit * 1.5) - 10)) * scaleY[0]));
+            int origineY = (int) (scaleY[1] - ((margeY - ((margeInit * 1.5) - 10)) / scaleY[0]));
             g.drawString((int) (origineY) + "", (margeInit / 2) - 10, (int) (this.getPreferredSize().height - (margeInit - 15 + (margeInit / 2))));
             if (!Objects.equals(parcours, null)) {
                 paintParcours(gr);
