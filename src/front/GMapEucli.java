@@ -33,7 +33,6 @@ public class GMapEucli extends JComponent {
     private int margeY;
     private double etendue;
     private Parcours<PointEuclidien> parcours;
-    //a modifier pourgarder la plus grande etendue et centrer l'autre axe 
 
     //graph.getPoints() -> tree map de integer et t extends point
     //new ArrayList<Point>(graph.getPoints().values());

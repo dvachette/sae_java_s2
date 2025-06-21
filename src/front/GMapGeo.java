@@ -4,10 +4,12 @@
  */
 package front;
 
+import javax.swing.JComponent;
+
 /**
  *
  * @author anqna
  */
-public class GMapGeo {
+public class GMapGeo extends JComponent{
     
 }
