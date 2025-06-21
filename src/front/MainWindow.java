@@ -4,6 +4,8 @@
  */
 package front;
 
+import back.Parcours;
+import back.PointEuclidien;
 import back.Voyage;
 import back.VoyageEucli;
 import back.VoyageFactory;
@@ -11,9 +13,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
+import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -39,16 +41,18 @@ public class MainWindow extends JFrame {
 
     private JScrollPane scrollPaneDistanceTable;
     private Voyage voyage;
+    private GMapEucli euclidianMap;
+    private boolean showTravel = false;
 
     // Variables declaration - do not modify                     
-    private JButton buttonShowTravel;
+    private JToggleButton buttonShowTravel;
     private JComboBox<String> comboAlgorithmChoice;
-    private JLabel jLabel1;
-    private JMenuBar jMenuBar1;
-    private JMenuItem jMenuItem1;
+    private JLabel labelTitleDistanceTable;
+    private JMenuBar menuBar;
+    private JMenuItem selectFolderMenuItem;
     private JPopupMenu.Separator jSeparator1;
     private JPopupMenu.Separator jSeparator3;
-    private JToggleButton jToggleButton1;
+    private JToggleButton editModeToggleButton;
     private JMenu menuEvaluation;
     private JMenu menuFile;
     private JMenuItem menuFileClose;
@@ -57,11 +61,12 @@ public class MainWindow extends JFrame {
     private JMenuItem menuFileOpen;
     private JTable tableDistanceTable;
     private JFileChooser fileChoserOpen;
-    
+
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
+        this.setResizable(false);
         this.voyage = new Voyage();
         initComponents();
         setVisible(true);
@@ -70,6 +75,7 @@ public class MainWindow extends JFrame {
     // Code généré par l'éditeur graphique de NetBeans
     @SuppressWarnings("unchecked")
     private void initComponents() {
+        euclidianMap = new GMapEucli();
         tableDistanceTable = new JTable();
 
         tableDistanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -82,10 +88,10 @@ public class MainWindow extends JFrame {
         scrollPaneDistanceTable = new JScrollPane(tableDistanceTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         comboAlgorithmChoice = new JComboBox<>();
-        buttonShowTravel = new JButton();
-        jLabel1 = new JLabel();
-        jToggleButton1 = new JToggleButton();
-        jMenuBar1 = new JMenuBar();
+        buttonShowTravel = new JToggleButton();
+        labelTitleDistanceTable = new JLabel();
+        editModeToggleButton = new JToggleButton();
+        menuBar = new JMenuBar();
         menuFile = new JMenu();
         menuFileOpen = new JMenuItem();
         menuFileClose = new JMenuItem();
@@ -94,7 +100,7 @@ public class MainWindow extends JFrame {
         jSeparator1 = new JPopupMenu.Separator();
         menuFileExport = new JMenuItem();
         menuEvaluation = new JMenu();
-        jMenuItem1 = new JMenuItem();
+        selectFolderMenuItem = new JMenuItem();
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -106,11 +112,11 @@ public class MainWindow extends JFrame {
 
         buttonShowTravel.setText("Afficher le trajet");
 
-        jLabel1.setText("Distances point à point");
+        labelTitleDistanceTable.setText("Distances point à point");
 
-        jToggleButton1.setText("Mode edition");
-        jToggleButton1.addActionListener((java.awt.event.ActionEvent evt) -> {
-            jToggleButton1ActionPerformed(evt);
+        editModeToggleButton.setText("Mode edition");
+        editModeToggleButton.addActionListener((java.awt.event.ActionEvent evt) -> {
+            editModeToggleButtonActionPerformed(evt);
         });
 
         menuFile.setText("Fichier");
@@ -136,54 +142,58 @@ public class MainWindow extends JFrame {
         menuFileExport.addActionListener((java.awt.event.ActionEvent evt) -> {
             menuFileExportActionPerformed(evt);
         });
+
+        buttonShowTravel.addActionListener((ActionEvent evt) -> {
+            showTravelToggleButtonActionPerformed(evt);
+        });
         menuFile.add(menuFileExport);
 
-        jMenuBar1.add(menuFile);
+        menuBar.add(menuFile);
 
         menuEvaluation.setText("Evaluation");
 
-        jMenuItem1.setText("Selectionner un dossier");
-        menuEvaluation.add(jMenuItem1);
+        selectFolderMenuItem.setText("Selectionner un dossier");
+        menuEvaluation.add(selectFolderMenuItem);
 
-        jMenuBar1.add(menuEvaluation);
+        menuBar.add(menuEvaluation);
 
-        setJMenuBar(jMenuBar1);
+        setJMenuBar(menuBar);
 
         GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGap(0, 1000, Short.MAX_VALUE)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(euclidianMap)
+                        //.addGap(0, 1000, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                                .addComponent(scrollPaneDistanceTable, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-                                                .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                                        .addComponent(jLabel1)
-                                                        .addGap(132, 132, 132)))
-                                        .addGroup(layout.createSequentialGroup()
-                                                .addGap(31, 31, 31)
-                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                        .addComponent(jToggleButton1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                        .addComponent(buttonShowTravel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGap(77, 77, 77)
-                                                .addComponent(comboAlgorithmChoice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                                .addContainerGap())))
-        );
-        layout.setVerticalGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(scrollPaneDistanceTable, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
-                                .addGap(31, 31, 31)
-                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(scrollPaneDistanceTable, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(labelTitleDistanceTable)
+                                                .addGap(132, 132, 132)))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addGap(31, 31, 31)
+                                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(editModeToggleButton, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(buttonShowTravel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addGap(77, 77, 77)
                                         .addComponent(comboAlgorithmChoice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(buttonShowTravel))
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
-                                .addComponent(jToggleButton1)
-                                .addGap(57, 57, 57))
+                                        .addContainerGap())))
+        );
+        layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(euclidianMap)
+                .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(labelTitleDistanceTable)
+                        .addGap(18, 18, 18)
+                        .addComponent(scrollPaneDistanceTable, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(comboAlgorithmChoice, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addComponent(buttonShowTravel))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 71, Short.MAX_VALUE)
+                        .addComponent(editModeToggleButton)
+                        .addGap(57, 57, 57))
         );
 
         pack();
@@ -198,8 +208,12 @@ public class MainWindow extends JFrame {
             try {
                 voyage = factory.createVoyage();
                 if (voyage instanceof VoyageEucli voyageEucli) {
+                    euclidianMap.setMap(voyageEucli.getGraph());
                     DistanceTableModel dtm = new DistanceTableModel(voyageEucli.getGraph());
                     tableDistanceTable.setModel(dtm);
+                }
+                if (!Objects.equals(voyage, null)) {
+
                     tableDistanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
                     TableColumnModel columnModel = tableDistanceTable.getColumnModel();
                     for (int i = 0; i < columnModel.getColumnCount(); i++) {
@@ -210,20 +224,19 @@ public class MainWindow extends JFrame {
                         @Override
                         public Component getTableCellRendererComponent(JTable table, Object value,
                                 boolean isSelected, boolean hasFocus, int row, int column) {
-                                    JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+                            JLabel c = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
 
-                                    
-                                    if (column == 0) {
-                                        c.setBackground(new Color(238, 238, 238));
-                                    } else {
-                                    // Add a tooltip
-                                        c.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
-                                        c.setForeground(isSelected ? table.getSelectionForeground() : Color.BLACK);
-                                        c.setToolTipText(String.format("Distance entre le point %s et le point %s : %s", table.getColumnName(column), table.getValueAt(row, 0), c.getText()));
-                                    }
-                                    return c;
-                                }
-                        });
+                            if (column == 0) {
+                                c.setBackground(new Color(238, 238, 238));
+                            } else {
+                                // Add a tooltip
+                                c.setBackground(isSelected ? table.getSelectionBackground() : Color.WHITE);
+                                c.setForeground(isSelected ? table.getSelectionForeground() : Color.BLACK);
+                                c.setToolTipText(String.format("Distance entre le point %s et le point %s : %s", table.getColumnName(column), table.getValueAt(row, 0), c.getText()));
+                            }
+                            return c;
+                        }
+                    });
                     // End of AI generated
 
                     scrollPaneDistanceTable.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -254,7 +267,38 @@ public class MainWindow extends JFrame {
         // TODO add your handling code here:
     }
 
-    private void jToggleButton1ActionPerformed(ActionEvent evt) {
+    private void editModeToggleButtonActionPerformed(ActionEvent evt) {
         // TODO add your handling code here:
+    }
+
+    private void showTravelToggleButtonActionPerformed(ActionEvent evt) {
+
+        if (!(Objects.equals(voyage, null))) {
+
+            if (voyage instanceof VoyageEucli voyageEucli) {
+
+                if (((JToggleButton) evt.getSource()).isSelected()) {
+
+                    Parcours<PointEuclidien> parcours = null;
+                    switch ((String) this.comboAlgorithmChoice.getSelectedItem()) {
+                        case "Meilleur trajet" ->
+                            parcours = Parcours.MeilleurAll(voyageEucli.getGraph());
+                        case "Trajet glouton" ->
+                            parcours = voyageEucli.getGraph().parcoursGlouton();
+                        case "Trajet par insertion" ->
+                            parcours = voyageEucli.getGraph().parcoursInsertion();
+                        case "trajet aléatoire" ->
+                            parcours = voyageEucli.getGraph().parcoursAleatoire();
+                    }
+                    euclidianMap.setParcours(parcours);
+
+                } else {
+                    euclidianMap.setParcours(null);
+                }
+                euclidianMap.repaint();
+
+            }
+        }
+
     }
 }

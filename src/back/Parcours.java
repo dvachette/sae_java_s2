@@ -121,7 +121,7 @@ public class Parcours<T extends Point> {
      * @return 
      */
 
-    public static Parcours MeilleurGlouton(Graph<Point> g, Point start) {
+    public static Parcours MeilleurGlouton(Graph<? extends Point> g, Point start) {
         Parcours best = parcoursGlouton(g, start);
         for (Point p : g.getPoints().values()) {
             Parcours current = parcoursGlouton(g, p);
@@ -138,7 +138,7 @@ public class Parcours<T extends Point> {
      * @return
      */
 
-    public static Parcours MeilleurInsertion(Graph<Point> g, Point start) {
+    public static Parcours MeilleurInsertion(Graph<? extends Point> g, Point start) {
         Parcours best = parcoursInsertion(g, start);
         for (Point p : g.getPoints().values()) {
             Parcours current = parcoursInsertion(g, p);
@@ -155,11 +155,12 @@ public class Parcours<T extends Point> {
         * @return
     */
 
-    public static Parcours MeilleurAll(Graph<Point> g){
+    public static Parcours MeilleurAll(Graph<? extends Point> g){
         Random rng = new Random();
         Point start = g.getPoints().get(rng.nextInt(0, g.getPoints().size()));
-        Parcours best = MeilleurInsertion(g, start);
-        Parcours current = MeilleurGlouton(g, start);
+        //Parcours best = MeilleurInsertion(g, start);
+        Parcours best = g.parcoursInsertion();
+        Parcours current = g.parcoursGlouton();
         if (current.getLength() < best.getLength()) {
             best = current;
         }
