@@ -95,13 +95,13 @@ public class GMapEucli extends JComponent {
             scaleX[0] = scaleY[0] = (this.getPreferredSize().width - (margeInit * 2)) / etendue;
             margeX = margeInit / 2 + margeInit;
             margeY = (int) (this.getPreferredSize().height - (margeInit * 2));
-            System.out.println("Marge Y : " + margeY);
+            //System.out.println("Marge Y : " + margeY);
             margeY -= (int) ((maxY - minY) * scaleY[0]);
-            System.out.println("Marge Y : " + margeY);
+            //System.out.println("Marge Y : " + margeY);
             margeY = margeY / 2;
-            System.out.println("Marge Y : " + margeY);
+            //System.out.println("Marge Y : " + margeY);
             margeY = margeY + margeInit / 2 + (margeInit - 10);
-            System.out.println("Marge Y : " + margeY);
+            //System.out.println("Marge Y : " + margeY);
 
         } else {
             etendue = maxY - minY;
@@ -113,10 +113,10 @@ public class GMapEucli extends JComponent {
 
         scaleX[1] = minX;
         scaleY[1] = minY;
-        System.out.println(scaleX[0] + " " + scaleX[1]);
-        System.out.println(scaleY[0] + " " + scaleY[1]);
-        System.out.println("Marge Y : " + margeY);
-        System.out.println("Marge X : " + margeX);
+//        System.out.println(scaleX[0] + " " + scaleX[1]);
+//        System.out.println(scaleY[0] + " " + scaleY[1]);
+//        System.out.println("Marge Y : " + margeY);
+//        System.out.println("Marge X : " + margeX);
     }
 
     /**
@@ -171,7 +171,7 @@ public class GMapEucli extends JComponent {
                 }
                 longUnite = (int) (unite * scaleX[0]);
                 nbGraduations = (int) (etendue / unite);
-                System.out.println("nbGraduations : " + nbGraduations + "   unite : " + unite + "   LongUnite : " + longUnite);
+//                System.out.println("nbGraduations : " + nbGraduations + "   unite : " + unite + "   LongUnite : " + longUnite);
             }
 
             //affichage des graduations sur l'axe horizontal en fonctions de l'échelle
@@ -205,7 +205,7 @@ public class GMapEucli extends JComponent {
 
             //affichage de l'origine en X
             int origineX = (int) (scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) / scaleX[0]));
-            System.out.println("chiffre bizarre : " +(scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) / scaleX[0])));
+//            System.out.println("chiffre bizarre : " +(scaleX[1] - ((margeX - ((margeInit * 1.5) - 10)) / scaleX[0])));
             g.drawString((int) (origineX) + "", margeInit, this.getPreferredSize().height - margeInit + 25);
 
             //affichage de l'origine en Y

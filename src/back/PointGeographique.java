@@ -66,7 +66,7 @@ public class PointGeographique implements Point {
         otherLatitude = otherLatitude * (pg.getLatitude() >= 0 ? 1: -1);
         otherLongitude = otherLongitude * (pg.getLongitude() >= 0 ? 1: -1);
         selfLatitude = selfLatitude * (latitude >= 0 ? 1: -1);
-        selfLatitude = selfLatitude * (longitude >= 0 ? 1: -1);
+        selfLongitude = selfLongitude * (longitude >= 0 ? 1: -1);
         
         return EARTH_RADIUS * Math.acos(
             (Math.sin(otherLatitude)*Math.sin(selfLatitude))+

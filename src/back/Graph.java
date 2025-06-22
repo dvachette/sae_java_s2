@@ -13,47 +13,47 @@ import java.util.TreeMap;
  *
  * @author donat
  * @param <T>
- * 
+ *
  * @brief Classe représentant un graphe
- * 
+ *
  */
 public class Graph<T extends Point> {
+
     private TreeMap<Integer, T> points;
 
     /**
      * @author donat
-     * 
+     *
      * @brief Constructeur de base, génère un graphe vide
      */
     public Graph() {
         this.points = new TreeMap<>();
     }
 
-    
     /**
      * @author donat
-     * 
+     *
      * @return Renvoie la map des points, indexés par leurs ID
      */
     public TreeMap<Integer, T> getPoints() {
         return points;
     }
-    
+
     /**
      * @author donat
-     * 
+     *
      * @param points Map de points à passer
-     * 
+     *
      * @warning À utiliser avec précautions
      */
     public void setPoints(TreeMap<Integer, T> points) {
         this.points = points;
-        
+
     }
 
     /**
      * @author donat
-     * 
+     *
      * @param id L'ID du point désiré
      * @return Point (T)
      */
@@ -105,7 +105,8 @@ public class Graph<T extends Point> {
         double dist = 0.0;
         ArrayList<Integer> pointsList = new ArrayList(points.keySet());
         for (int i = 0; i < pointsList.size(); i++) {
-            for (int j = 0; (j < i+1) && (j < pointsList.size()); j++) {
+            for (int j = 0; (j < i + 1) && (j < pointsList.size()); j++) {
+               
                 dist = points.get(pointsList.get(i)).distanceOf(points.get(pointsList.get(j)));
                 map.get(pointsList.get(i)).put(pointsList.get(j), dist);
                 map.get(pointsList.get(j)).put(pointsList.get(i), dist);
@@ -113,7 +114,7 @@ public class Graph<T extends Point> {
         }
         return map;
     }
-    
+
     public static Graph<PointEuclidien> randomPointSet(int count, double minX, double maxX, double minY, double maxY) {
         Graph<PointEuclidien> graph = new Graph<>();
         Random rng = new Random();
@@ -122,15 +123,15 @@ public class Graph<T extends Point> {
         }
         return graph;
     }
-    
+
     public static Graph<PointEuclidien> randomPointSet(int count) {
         return Graph.randomPointSet(count, 0, 100, 0, 100);
     }
-    
+
     public int maxIdValue() {
         return Collections.max(points.keySet());
     }
-    
+
     public Parcours<T> parcoursGlouton() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         T start = pool.remove(0);
@@ -147,16 +148,16 @@ public class Graph<T extends Point> {
         }
         return shortest;
     }
-    
-        public Parcours<T> parcoursGlouton(T start, ArrayList<T> pool) {
+
+    public Parcours<T> parcoursGlouton(T start, ArrayList<T> pool) {
         ArrayList<T> path = new ArrayList<>();
-        
+
         T current = start;
         path.add(current);
         double length = 0;
         T nextPoint;
-        
-        while (!pool.isEmpty()) { 
+
+        while (!pool.isEmpty()) {
             nextPoint = (T) current.closest(pool);
             length += nextPoint.distanceOf(current);
             path.add(nextPoint);
@@ -166,23 +167,28 @@ public class Graph<T extends Point> {
         length += current.distanceOf(path.get(0)); // Return to start
         return new Parcours<>(length, path);
     }
-    
 
     public Parcours<T> parcoursAleatoire() {
+        System.out.println("CALLING OF PARCOURS ALEATOIRE");
         ArrayList<T> pool = new ArrayList<>(points.values());
         Random rng = new Random();
         ArrayList<T> path = new ArrayList<>();
         int size = pool.size();
-        for (int i = size; i > 0; i++) {
-            path.add(pool.get(rng.nextInt(0, i)));
+        System.out.println("pool : ");
+        System.out.println(pool);
+        for (int i = size; i > 0; i--) {
+            path.add(pool.remove(rng.nextInt(0, i)));
+
         }
+        System.out.println("path : ");
+        System.out.println(path);
         double length = path.getLast().distanceOf(path.getFirst());
         for (int i = 0; i < size - 1; i++) {
             length += path.get(i).distanceOf(path.get(i + 1));
         }
         return new Parcours(length, path);
     }
-    
+
     public Parcours<T> parcoursInsertion() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         T start = pool.remove(0);
@@ -199,7 +205,7 @@ public class Graph<T extends Point> {
         }
         return shortest;
     }
-    
+
     public Parcours<T> parcoursInsertion(T start, ArrayList<T> pool) {
         ArrayList<T> path = new ArrayList<>();
         T current = start;
@@ -241,6 +247,5 @@ public class Graph<T extends Point> {
     public String toString() {
         return "Graph{" + "points=" + points + '}';
     }
-    
 
 }

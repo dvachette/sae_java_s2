@@ -6,16 +6,19 @@ package front;
 
 import back.Parcours;
 import back.PointEuclidien;
+import back.PointGeographique;
 import back.Voyage;
 import back.VoyageEucli;
 import back.VoyageFactory;
 import back.VoyageGeo;
+import front.DistanceTableModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
+import java.util.HashSet;
 import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
@@ -47,6 +50,9 @@ import org.jxmapviewer.JXMapViewer;
 import org.jxmapviewer.input.PanMouseInputListener;
 import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
 import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.WaypointPainter;
+import waypoints.CustomWaypoint;
+import waypoints.WaypointRender;
 
 /**
  *
@@ -54,6 +60,7 @@ import org.jxmapviewer.viewer.GeoPosition;
  */
 public class MainWindow extends JFrame {
 
+    private final HashSet<CustomWaypoint> waypoints = new HashSet<>();
     private JXMapViewer jxMapViewer;
     private JScrollPane scrollPaneDistanceTable;
     private Voyage voyage;
@@ -112,7 +119,7 @@ public class MainWindow extends JFrame {
         euclidianMap = new GMapEucli();
         tableDistanceTable = new JTable();
         jxMapViewer = new JXMapViewer();
-        jxMapViewer.setPreferredSize(new Dimension(950, 650));
+        jxMapViewer.setPreferredSize(euclidianMap.getPreferredSize());
         jxMapViewer.setVisible(false);
         tableDistanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel columnModel = tableDistanceTable.getColumnModel();
@@ -140,7 +147,7 @@ public class MainWindow extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        comboAlgorithmChoice.setModel(new DefaultComboBoxModel<>(new String[]{"Meilleur trajet", "Trajet glouton", "Trajet par insertion", "trajet aléatoire"}));
+        comboAlgorithmChoice.setModel(new DefaultComboBoxModel<>(new String[]{"Meilleur trajet", "Trajet glouton", "Trajet par insertion", "Trajet aleatoire"}));
         comboAlgorithmChoice.setToolTipText("Choisi");
         comboAlgorithmChoice.addActionListener((java.awt.event.ActionEvent evt) -> {
             comboAlgorithmChoiceActionPerformed(evt);
@@ -256,6 +263,39 @@ public class MainWindow extends JFrame {
                 } else if (voyage instanceof VoyageGeo voyageGeo) {
                     euclidianMap.setVisible(false);
                     jxMapViewer.setVisible(true);
+                    clearWaypoints();
+                    for (PointGeographique p : voyageGeo.getGraph().getPoints().values()) {
+                        waypoints.add(new CustomWaypoint(p));
+                    }
+                    // ProgressBar (ChatGPT 4o, reworked by Donatien VACHETTE)
+                    JDialog dialog = new JDialog(this, "Traitement en cours...", true);
+                    JProgressBar progressBar = new JProgressBar();
+                    progressBar.setIndeterminate(true);
+                    dialog.add(BorderLayout.CENTER, progressBar);
+                    dialog.setUndecorated(true);
+                    dialog.setSize(200, 50);
+                    dialog.setLocationRelativeTo(this);
+
+                    SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                        @Override
+                        protected Void doInBackground() {
+                            initWaypoints();
+                            System.out.println("Points placés");
+                            DistanceTableModel dtm = new DistanceTableModel(voyageGeo.getGraph());
+                            tableDistanceTable.setModel(dtm);
+                            System.out.println("distances calculées");
+                            return null;
+                        }
+
+                        @Override
+                        protected void done() {
+                            dialog.dispose(); // Fermer la boîte de dialogue à la fin
+                        }
+                    };
+
+                    worker.execute();
+                    dialog.setVisible(true);
+
                 }
                 if (!Objects.equals(voyage, null)) {
 
@@ -339,10 +379,9 @@ public class MainWindow extends JFrame {
                     SwingWorker<Void, Void> worker = new SwingWorker<>() {
                         @Override
                         protected Void doInBackground() {
-                            // Simule un calcul long (remplacez ici par votre vrai traitement)
 
                             Parcours<PointEuclidien> parcours = null;
-
+                            System.out.println("Appel de trajet");
                             switch ((String) comboAlgorithmChoice.getSelectedItem()) {
                                 case "Meilleur trajet" ->
                                     parcours = Parcours.MeilleurAll(voyageEucli.getGraph());
@@ -350,7 +389,7 @@ public class MainWindow extends JFrame {
                                     parcours = voyageEucli.getGraph().parcoursGlouton();
                                 case "Trajet par insertion" ->
                                     parcours = voyageEucli.getGraph().parcoursInsertion();
-                                case "trajet aléatoire" ->
+                                case "Trajet aleatoire" ->
                                     parcours = voyageEucli.getGraph().parcoursAleatoire();
                             }
                             euclidianMap.setParcours(parcours);
@@ -370,8 +409,65 @@ public class MainWindow extends JFrame {
                 }
                 euclidianMap.repaint();
 
+            } else if (voyage instanceof VoyageGeo voyageGeo) {
+                if (buttonShowTravel.isSelected()) {
+
+                    // ProgressBar (ChatGPT 4o, reworked by Donatien VACHETTE)
+                    JDialog dialog = new JDialog(this, "Traitement en cours...", true);
+                    JProgressBar progressBar = new JProgressBar();
+                    progressBar.setIndeterminate(true);
+                    dialog.add(BorderLayout.CENTER, progressBar);
+                    dialog.setUndecorated(true);
+                    dialog.setSize(200, 50);
+                    dialog.setLocationRelativeTo(this);
+
+                    SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                        @Override
+                        protected Void doInBackground() {
+
+                            Parcours<PointGeographique> parcours = null;
+
+                            switch ((String) comboAlgorithmChoice.getSelectedItem()) {
+                                case "Meilleur trajet" ->
+                                    parcours = Parcours.MeilleurAll(voyageGeo.getGraph());
+                                case "Trajet glouton" ->
+                                    parcours = voyageGeo.getGraph().parcoursGlouton();
+                                case "Trajet par insertion" ->
+                                    parcours = voyageGeo.getGraph().parcoursInsertion();
+                                case "Trajet aleatoire" ->
+                                    parcours = voyageGeo.getGraph().parcoursAleatoire();
+                            }
+                            ((WaypointRender) jxMapViewer.getOverlayPainter()).setParcours(parcours);
+                            return null;
+                        }
+
+                        @Override
+                        protected void done() {
+                            dialog.dispose(); // Fermer la boîte de dialogue à la fin
+                        }
+                    };
+
+                    worker.execute();
+                    dialog.setVisible(true);
+                } else {
+                    ((WaypointRender) jxMapViewer.getOverlayPainter()).setParcours(null);
+                }
+                jxMapViewer.repaint();
             }
         }
 
+    }
+
+    private void initWaypoints() {
+        WaypointPainter<CustomWaypoint> wp = new WaypointRender();
+        wp.setWaypoints(waypoints);
+        jxMapViewer.setOverlayPainter(wp);
+
+    }
+
+    private void clearWaypoints() {
+
+        waypoints.clear();
+        initWaypoints();
     }
 }
