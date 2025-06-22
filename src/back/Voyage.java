@@ -6,12 +6,11 @@ import java.io.IOException;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-
 /**
  * @author Ethan
  */
-
 public class Voyage {
+
     protected String name;
     protected String type;
     protected String comment;
@@ -20,8 +19,7 @@ public class Voyage {
     protected String displayType;
     protected String edgeWeightFormat;
 
-
-    public Voyage(){
+    public Voyage() {
         this.name = "";
         this.type = "";
         this.comment = "";
@@ -40,7 +38,7 @@ public class Voyage {
         this.displayType = displayType;
         this.edgeWeightFormat = edgeWeightFormat;
     }
-    
+
     public String getName() {
         return name;
     }
@@ -102,7 +100,7 @@ public class Voyage {
         return "Voyage{" + "name=" + name + ", type=" + type + ", comment=" + comment + ", dimension=" + dimension + ", typeCoordinate=" + typeCoordinate + ", displayType=" + displayType + ", edgeWeightFormat=" + edgeWeightFormat + '}';
     }
 
-        public void exportToFile(String filePath, Parcours<? extends Point> parcours) {
+    public void exportToFile(String filePath, Parcours<? extends Point> parcours) {
         try {
             FileWriter file = new FileWriter(filePath);
             file.write("NAME : " + name + "\n");
@@ -126,8 +124,7 @@ public class Voyage {
             }
             file.write("EOF\n");
             file.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
             JDialog dialog = new JDialog();
             dialog.setType(java.awt.Window.Type.UTILITY);
@@ -141,4 +138,3 @@ public class Voyage {
         }
     }
 }
-

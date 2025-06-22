@@ -9,14 +9,18 @@ import back.PointEuclidien;
 import back.Voyage;
 import back.VoyageEucli;
 import back.VoyageFactory;
+import back.VoyageGeo;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.io.FileNotFoundException;
 import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.GroupLayout;
 import javax.swing.JComboBox;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,14 +29,24 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
+import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
+import javax.swing.event.MouseInputListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
+import org.jxmapviewer.OSMTileFactoryInfo;
+import org.jxmapviewer.viewer.DefaultTileFactory;
+import org.jxmapviewer.viewer.TileFactoryInfo;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.input.PanMouseInputListener;
+import org.jxmapviewer.input.ZoomMouseWheelListenerCenter;
+import org.jxmapviewer.viewer.GeoPosition;
 
 /**
  *
@@ -40,6 +54,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class MainWindow extends JFrame {
 
+    private JXMapViewer jxMapViewer;
     private JScrollPane scrollPaneDistanceTable;
     private Voyage voyage;
     private GMapEucli euclidianMap;
@@ -70,7 +85,25 @@ public class MainWindow extends JFrame {
         this.setResizable(false);
         this.voyage = new Voyage();
         initComponents();
+        initJxMapViewer();
         setVisible(true);
+
+    }
+
+    private void initJxMapViewer() {
+        TileFactoryInfo info = new OSMTileFactoryInfo();
+        DefaultTileFactory tileFactory = new DefaultTileFactory(info);
+        jxMapViewer.setTileFactory(tileFactory);
+        GeoPosition geo = new GeoPosition(45.7708737, 4.8913516);
+        jxMapViewer.setAddressLocation(geo);
+        jxMapViewer.setZoom(5);
+
+        // Event listener
+        MouseInputListener mouseInputListener = new PanMouseInputListener(jxMapViewer);
+        jxMapViewer.addMouseListener(mouseInputListener);
+        jxMapViewer.addMouseMotionListener(mouseInputListener);
+        jxMapViewer.addMouseWheelListener(new ZoomMouseWheelListenerCenter(jxMapViewer));
+
     }
 
     // Code généré par l'éditeur graphique de NetBeans
@@ -78,7 +111,9 @@ public class MainWindow extends JFrame {
     private void initComponents() {
         euclidianMap = new GMapEucli();
         tableDistanceTable = new JTable();
-
+        jxMapViewer = new JXMapViewer();
+        jxMapViewer.setPreferredSize(new Dimension(950, 650));
+        jxMapViewer.setVisible(false);
         tableDistanceTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         TableColumnModel columnModel = tableDistanceTable.getColumnModel();
         for (int i = 0; i < columnModel.getColumnCount(); i++) {
@@ -164,8 +199,8 @@ public class MainWindow extends JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                 .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jxMapViewer)
                         .addComponent(euclidianMap)
-                        //.addGap(0, 1000, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                 .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addComponent(scrollPaneDistanceTable, GroupLayout.PREFERRED_SIZE, 400, GroupLayout.PREFERRED_SIZE)
@@ -182,6 +217,7 @@ public class MainWindow extends JFrame {
                                         .addContainerGap())))
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                .addComponent(jxMapViewer)
                 .addComponent(euclidianMap)
                 .addGroup(layout.createSequentialGroup()
                         .addGap(34, 34, 34)
@@ -209,12 +245,17 @@ public class MainWindow extends JFrame {
             try {
                 voyage = factory.createVoyage();
                 if (voyage instanceof VoyageEucli voyageEucli) {
+                    jxMapViewer.setVisible(false);
+                    euclidianMap.setVisible(true);
 
                     euclidianMap.setMap(voyageEucli.getGraph());
                     euclidianMap.setParcours(null);
                     showTravelToggleButtonActionPerformed();
                     DistanceTableModel dtm = new DistanceTableModel(voyageEucli.getGraph());
                     tableDistanceTable.setModel(dtm);
+                } else if (voyage instanceof VoyageGeo voyageGeo) {
+                    euclidianMap.setVisible(false);
+                    jxMapViewer.setVisible(true);
                 }
                 if (!Objects.equals(voyage, null)) {
 
@@ -286,19 +327,44 @@ public class MainWindow extends JFrame {
 
                 if (buttonShowTravel.isSelected()) {
 
-                    Parcours<PointEuclidien> parcours = null;
-                    switch ((String) this.comboAlgorithmChoice.getSelectedItem()) {
-                        case "Meilleur trajet" ->
-                            parcours = Parcours.MeilleurAll(voyageEucli.getGraph());
-                        case "Trajet glouton" ->
-                            parcours = voyageEucli.getGraph().parcoursGlouton();
-                        case "Trajet par insertion" ->
-                            parcours = voyageEucli.getGraph().parcoursInsertion();
-                        case "trajet aléatoire" ->
-                            parcours = voyageEucli.getGraph().parcoursAleatoire();
-                    }
-                    euclidianMap.setParcours(parcours);
+                    // ProgressBar (ChatGPT 4o, reworked by Donatien VACHETTE)
+                    JDialog dialog = new JDialog(this, "Traitement en cours...", true);
+                    JProgressBar progressBar = new JProgressBar();
+                    progressBar.setIndeterminate(true);
+                    dialog.add(BorderLayout.CENTER, progressBar);
+                    dialog.setUndecorated(true);
+                    dialog.setSize(200, 50);
+                    dialog.setLocationRelativeTo(this);
 
+                    SwingWorker<Void, Void> worker = new SwingWorker<>() {
+                        @Override
+                        protected Void doInBackground() {
+                            // Simule un calcul long (remplacez ici par votre vrai traitement)
+
+                            Parcours<PointEuclidien> parcours = null;
+
+                            switch ((String) comboAlgorithmChoice.getSelectedItem()) {
+                                case "Meilleur trajet" ->
+                                    parcours = Parcours.MeilleurAll(voyageEucli.getGraph());
+                                case "Trajet glouton" ->
+                                    parcours = voyageEucli.getGraph().parcoursGlouton();
+                                case "Trajet par insertion" ->
+                                    parcours = voyageEucli.getGraph().parcoursInsertion();
+                                case "trajet aléatoire" ->
+                                    parcours = voyageEucli.getGraph().parcoursAleatoire();
+                            }
+                            euclidianMap.setParcours(parcours);
+                            return null;
+                        }
+
+                        @Override
+                        protected void done() {
+                            dialog.dispose(); // Fermer la boîte de dialogue à la fin
+                        }
+                    };
+
+                    worker.execute();
+                    dialog.setVisible(true);
                 } else {
                     euclidianMap.setParcours(null);
                 }
