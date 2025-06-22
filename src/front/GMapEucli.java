@@ -87,16 +87,22 @@ public class GMapEucli extends JComponent {
             }
         }
 
+        double etendueX = maxX - minX;
+        double etendueY = maxY - minY;
+        scaleX[0] = (this.getPreferredSize().width - (margeInit * 2)) / etendueX;
+        scaleY[0] = (this.getPreferredSize().height - (margeInit * 2)) / etendueY;
+       
         //coef de proportion déterminé sur l'etendue la plus grande
         //marges X et Y fixées pour centrer les points
-        if ((maxX - minX) >= (maxY - minY)) {
+        if ((scaleX[0]) < (scaleY[0])) {
 
-            etendue = maxX - minX;
-            scaleX[0] = scaleY[0] = (this.getPreferredSize().width - (margeInit * 2)) / etendue;
+            etendue = etendueX;
+            scaleY[0] = scaleX[0];
             margeX = margeInit / 2 + margeInit;
             margeY = (int) (this.getPreferredSize().height - (margeInit * 2));
             System.out.println("Marge Y : " + margeY);
             margeY -= (int) ((maxY - minY) * scaleY[0]);
+            System.out.println((maxY - minY));
             System.out.println("Marge Y : " + margeY);
             margeY = margeY / 2;
             System.out.println("Marge Y : " + margeY);
@@ -104,15 +110,16 @@ public class GMapEucli extends JComponent {
             System.out.println("Marge Y : " + margeY);
 
         } else {
-            etendue = maxY - minY;
-            scaleY[0] = scaleX[0] = (this.getPreferredSize().height - (margeInit * 2)) / etendue;
+            etendue = etendueY;
+            scaleX[0] = scaleY[0];
             margeY = margeInit / 2 + margeInit;
             margeX = (int) ((this.getPreferredSize().width - (margeInit * 2) - ((maxX - minX) * scaleX[0])) / 2);
             margeX += (margeInit / 2) + (margeInit - 10);
         }
 
         scaleX[1] = minX;
-        scaleY[1] = minY;
+        scaleY[1] = minY;   
+        System.out.println(maxX +" "+maxY);
         System.out.println(scaleX[0] + " " + scaleX[1]);
         System.out.println(scaleY[0] + " " + scaleY[1]);
         System.out.println("Marge Y : " + margeY);
