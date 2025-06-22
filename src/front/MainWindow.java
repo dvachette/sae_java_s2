@@ -180,6 +180,9 @@ public class MainWindow extends JFrame {
         menuFile.add(jSeparator3);
 
         menuFileGenerateRandomPointSet.setText("Générer des points aléatoires");
+        menuFileGenerateRandomPointSet.addActionListener((ActionEvent evt) -> {
+            menuFileGenerateRandomPointSetActionPerformed(evt);
+        });
         menuFile.add(menuFileGenerateRandomPointSet);
         menuFile.add(jSeparator1);
 
@@ -243,6 +246,24 @@ public class MainWindow extends JFrame {
         );
 
         pack();
+    }
+
+    private void menuFileGenerateRandomPointSetActionPerformed(ActionEvent evt) {
+        AskForCreatingRandomPointSet popup = new AskForCreatingRandomPointSet(this);
+        popup.setVisible(true);
+        if (popup.OK()) {
+            VoyageEucli newVoyage = new VoyageEucli();
+            newVoyage.setGraph(popup.getGeneratedGraph());
+            voyage = newVoyage;
+            jxMapViewer.setVisible(false);
+            euclidianMap.setVisible(true);
+
+            euclidianMap.setMap(newVoyage.getGraph());
+            euclidianMap.setParcours(null);
+            showTravelToggleButtonActionPerformed();
+            DistanceTableModel dtm = new DistanceTableModel(newVoyage.getGraph());
+            tableDistanceTable.setModel(dtm);
+        }
     }
 
     private void menuFileOpenActionPerformed(ActionEvent e) {
@@ -385,7 +406,7 @@ public class MainWindow extends JFrame {
                             Parcours<PointEuclidien> parcours = null;
                             System.out.println("Appel de trajet");
                             switch ((String) comboAlgorithmChoice.getSelectedItem()) {
-                                case "Meilleur trajet":
+                                case "Meilleur trajet" -> {
                                     if (Objects.equals(parcoursGloutonEuclidien, null)) {
                                         parcoursGloutonEuclidien = voyageEucli.getGraph().parcoursGlouton();
                                     }
@@ -397,23 +418,22 @@ public class MainWindow extends JFrame {
                                     } else {
                                         parcours = parcoursGloutonEuclidien;
                                     }
-                                    break;
+                                }
 
-                                case "Trajet glouton":
+                                case "Trajet glouton" -> {
                                     if (Objects.equals(parcoursGloutonEuclidien, null)) {
                                         parcoursGloutonEuclidien = voyageEucli.getGraph().parcoursGlouton();
                                     }
                                     parcours = parcoursGloutonEuclidien;
-                                    break;
-                                case "Trajet par insertion":
+                                }
+                                case "Trajet par insertion" -> {
                                     if (Objects.equals(parcoursInsertionEuclidien, null)) {
                                         parcoursInsertionEuclidien = voyageEucli.getGraph().parcoursInsertion();
                                     }
                                     parcours = parcoursInsertionEuclidien;
-                                    break;
-                                case "Trajet aleatoire":
+                                }
+                                case "Trajet aleatoire" ->
                                     parcours = voyageEucli.getGraph().parcoursAleatoire();
-                                    break;
                             }
                             euclidianMap.setParcours(parcours);
                             return null;
@@ -451,7 +471,7 @@ public class MainWindow extends JFrame {
                             Parcours<PointGeographique> parcours = null;
 
                             switch ((String) comboAlgorithmChoice.getSelectedItem()) {
-                                case "Meilleur trajet":
+                                case "Meilleur trajet" -> {
                                     if (Objects.equals(parcoursGloutonGeographique, null)) {
                                         parcoursGloutonGeographique = voyageGeo.getGraph().parcoursGlouton();
                                     }
@@ -463,23 +483,22 @@ public class MainWindow extends JFrame {
                                     } else {
                                         parcours = parcoursGloutonGeographique;
                                     }
-                                    break;
+                                }
 
-                                case "Trajet glouton":
+                                case "Trajet glouton" -> {
                                     if (Objects.equals(parcoursGloutonGeographique, null)) {
                                         parcoursGloutonGeographique = voyageGeo.getGraph().parcoursGlouton();
                                     }
                                     parcours = parcoursGloutonGeographique;
-                                    break;
-                                case "Trajet par insertion":
+                                }
+                                case "Trajet par insertion" -> {
                                     if (Objects.equals(parcoursInsertionGeographique, null)) {
                                         parcoursInsertionGeographique = voyageGeo.getGraph().parcoursInsertion();
                                     }
                                     parcours = parcoursInsertionGeographique;
-                                    break;
-                                case "Trajet aleatoire":
+                                }
+                                case "Trajet aleatoire" ->
                                     parcours = voyageGeo.getGraph().parcoursAleatoire();
-                                    break;
                             }
                             ((WaypointRender) jxMapViewer.getOverlayPainter()).setParcours(parcours);
                             return null;
