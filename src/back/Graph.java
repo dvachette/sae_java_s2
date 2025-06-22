@@ -6,6 +6,7 @@ package back;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Random;
 import java.util.TreeMap;
 
@@ -106,7 +107,7 @@ public class Graph<T extends Point> {
         ArrayList<Integer> pointsList = new ArrayList(points.keySet());
         for (int i = 0; i < pointsList.size(); i++) {
             for (int j = 0; (j < i + 1) && (j < pointsList.size()); j++) {
-               
+
                 dist = points.get(pointsList.get(i)).distanceOf(points.get(pointsList.get(j)));
                 map.get(pointsList.get(i)).put(pointsList.get(j), dist);
                 map.get(pointsList.get(j)).put(pointsList.get(i), dist);
@@ -178,7 +179,6 @@ public class Graph<T extends Point> {
         System.out.println(pool);
         for (int i = size; i > 0; i--) {
             path.add(pool.remove(rng.nextInt(0, i)));
-
         }
         System.out.println("path : ");
         System.out.println(path);
@@ -198,6 +198,7 @@ public class Graph<T extends Point> {
         for (int i = 1; i < size; i++) {
             pool = new ArrayList<>(points.values());
             start = pool.remove(i);
+            System.out.println("Testing from start point (out of "+ Integer.toString(size) + ") : " + Integer.toString(i));
             current = parcoursInsertion(start, pool);
             if (current.getLength() < shortest.getLength()) {
                 shortest = current;
@@ -205,44 +206,57 @@ public class Graph<T extends Point> {
         }
         return shortest;
     }
-
+    /**
+     * @author ChatGPT 4o, Donatien VACHETTE
+     * @param start
+     * @param pool
+     * @return 
+     */
     public Parcours<T> parcoursInsertion(T start, ArrayList<T> pool) {
-        ArrayList<T> path = new ArrayList<>();
-        T current = start;
-        path.add(current);
-        T closestToStart = (T) start.closest(pool);
-        pool.remove(closestToStart);
-        path.add(closestToStart);
-        double length = start.distanceOf(closestToStart);
+    // 1. Tri des points selon leur ID (ordre imposé)
+    pool.sort(Comparator.comparingInt(T::getId));
 
-        while (!pool.isEmpty()) {
-            double minDistance = Double.MAX_VALUE;
-            T nextPoint = null;
-            int insertIndex = -1;
+    ArrayList<T> path = new ArrayList<>();
+    path.add(start);
 
-            for (int i = 0; i < path.size(); i++) {
-                T p1 = path.get(i);
-                T p2 = (i == path.size() - 1) ? path.get(0) : path.get(i + 1);
-                for (T candidate : pool) {
-                    double distance = p1.distanceOf(candidate) + candidate.distanceOf(p2) - p1.distanceOf(p2);
-                    if (distance < minDistance) {
-                        minDistance = distance;
-                        nextPoint = candidate;
-                        insertIndex = i + 1;
-                    }
-                }
-            }
+    // 2. Ajouter le point le plus proche du départ
+    T closestToStart = (T) start.closest(pool);
+    pool.remove(closestToStart);
+    path.add(closestToStart);
 
-            if (nextPoint != null) {
-                length += minDistance;
-                path.add(insertIndex, nextPoint);
-                pool.remove(nextPoint);
+    double totalDistance = start.distanceOf(closestToStart);
+
+    // 3. Pour chaque point, insérer à l’endroit minimisant l’allongement du parcours
+    for (T point : pool) {
+        int bestInsertIndex = 1;
+        double bestDelta = Double.MAX_VALUE;
+
+        for (int i = 1; i < path.size(); i++) {
+            T prev = path.get(i - 1);
+            T next = path.get(i);
+            double delta = prev.distanceOf(point) + point.distanceOf(next) - prev.distanceOf(next);
+
+            if (delta < bestDelta) {
+                bestDelta = delta;
+                bestInsertIndex = i;
             }
         }
-        length += path.getLast().distanceOf(path.getFirst()); // Return to start
-        return new Parcours(length, path);
+
+        // Tester aussi insertion en fin
+        T last = path.get(path.size() - 1);
+        double deltaEnd = last.distanceOf(point);
+
+        if (deltaEnd < bestDelta) {
+            bestDelta = deltaEnd;
+            bestInsertIndex = path.size();
+        }
+
+        path.add(bestInsertIndex, point);
+        totalDistance += bestDelta;
     }
 
+    return new Parcours<>(totalDistance, path);
+}
     @Override
     public String toString() {
         return "Graph{" + "points=" + points + '}';
