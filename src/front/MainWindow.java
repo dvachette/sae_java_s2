@@ -60,6 +60,8 @@ import waypoints.WaypointRender;
  */
 public class MainWindow extends JFrame {
 
+    private Parcours<PointEuclidien> parcoursInsertionEuclidien, parcoursGloutonEuclidien;
+    private Parcours<PointGeographique> parcoursInsertionGeographique, parcoursGloutonGeographique;
     private final HashSet<CustomWaypoint> waypoints = new HashSet<>();
     private JXMapViewer jxMapViewer;
     private JScrollPane scrollPaneDistanceTable;
@@ -383,14 +385,35 @@ public class MainWindow extends JFrame {
                             Parcours<PointEuclidien> parcours = null;
                             System.out.println("Appel de trajet");
                             switch ((String) comboAlgorithmChoice.getSelectedItem()) {
-                                case "Meilleur trajet" ->
-                                    parcours = Parcours.MeilleurAll(voyageEucli.getGraph());
-                                case "Trajet glouton" ->
-                                    parcours = voyageEucli.getGraph().parcoursGlouton();
-                                case "Trajet par insertion" ->
-                                    parcours = voyageEucli.getGraph().parcoursInsertion();
-                                case "Trajet aleatoire" ->
+                                case "Meilleur trajet":
+                                    if (Objects.equals(parcoursGloutonEuclidien, null)) {
+                                        parcoursGloutonEuclidien = voyageEucli.getGraph().parcoursGlouton();
+                                    }
+                                    if (Objects.equals(parcoursInsertionEuclidien, null)) {
+                                        parcoursInsertionEuclidien = voyageEucli.getGraph().parcoursInsertion();
+                                    }
+                                    if (parcoursInsertionEuclidien.getLength() < parcoursGloutonEuclidien.getLength()) {
+                                        parcours = parcoursInsertionEuclidien;
+                                    } else {
+                                        parcours = parcoursGloutonEuclidien;
+                                    }
+                                    break;
+
+                                case "Trajet glouton":
+                                    if (Objects.equals(parcoursGloutonEuclidien, null)) {
+                                        parcoursGloutonEuclidien = voyageEucli.getGraph().parcoursGlouton();
+                                    }
+                                    parcours = parcoursGloutonEuclidien;
+                                    break;
+                                case "Trajet par insertion":
+                                    if (Objects.equals(parcoursInsertionEuclidien, null)) {
+                                        parcoursInsertionEuclidien = voyageEucli.getGraph().parcoursInsertion();
+                                    }
+                                    parcours = parcoursInsertionEuclidien;
+                                    break;
+                                case "Trajet aleatoire":
                                     parcours = voyageEucli.getGraph().parcoursAleatoire();
+                                    break;
                             }
                             euclidianMap.setParcours(parcours);
                             return null;
@@ -428,14 +451,35 @@ public class MainWindow extends JFrame {
                             Parcours<PointGeographique> parcours = null;
 
                             switch ((String) comboAlgorithmChoice.getSelectedItem()) {
-                                case "Meilleur trajet" ->
-                                    parcours = Parcours.MeilleurAll(voyageGeo.getGraph());
-                                case "Trajet glouton" ->
-                                    parcours = voyageGeo.getGraph().parcoursGlouton();
-                                case "Trajet par insertion" ->
-                                    parcours = voyageGeo.getGraph().parcoursInsertion();
-                                case "Trajet aleatoire" ->
+                                case "Meilleur trajet":
+                                    if (Objects.equals(parcoursGloutonGeographique, null)) {
+                                        parcoursGloutonGeographique = voyageGeo.getGraph().parcoursGlouton();
+                                    }
+                                    if (Objects.equals(parcoursInsertionGeographique, null)) {
+                                        parcoursInsertionGeographique = voyageGeo.getGraph().parcoursInsertion();
+                                    }
+                                    if (parcoursInsertionGeographique.getLength() < parcoursGloutonGeographique.getLength()) {
+                                        parcours = parcoursInsertionGeographique;
+                                    } else {
+                                        parcours = parcoursGloutonGeographique;
+                                    }
+                                    break;
+
+                                case "Trajet glouton":
+                                    if (Objects.equals(parcoursGloutonGeographique, null)) {
+                                        parcoursGloutonGeographique = voyageGeo.getGraph().parcoursGlouton();
+                                    }
+                                    parcours = parcoursGloutonGeographique;
+                                    break;
+                                case "Trajet par insertion":
+                                    if (Objects.equals(parcoursInsertionGeographique, null)) {
+                                        parcoursInsertionGeographique = voyageGeo.getGraph().parcoursInsertion();
+                                    }
+                                    parcours = parcoursInsertionGeographique;
+                                    break;
+                                case "Trajet aleatoire":
                                     parcours = voyageGeo.getGraph().parcoursAleatoire();
+                                    break;
                             }
                             ((WaypointRender) jxMapViewer.getOverlayPainter()).setParcours(parcours);
                             return null;
