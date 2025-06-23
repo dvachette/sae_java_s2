@@ -38,6 +38,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
+import javax.swing.ListSelectionModel;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
@@ -133,7 +134,7 @@ public class MainWindow extends JFrame {
             columnModel.getColumn(i).setMinWidth(30);
         }
         tableDistanceTable.setColumnModel(columnModel);
-
+        tableDistanceTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         scrollPaneDistanceTable = new JScrollPane(tableDistanceTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         comboAlgorithmChoice = new JComboBox<>();
@@ -264,7 +265,7 @@ public class MainWindow extends JFrame {
 
     private void tableDistanceTableOnClick(ListSelectionEvent e) {
         if (voyage instanceof VoyageEucli && euclidianMap.isEdit_mode() && tableDistanceTable.getSelectedRow() > 0) {
-            if (JOptionPane.showConfirmDialog(tableDistanceTable, "Voulez vous vraiment supprimer ce point ?", "Suppression - Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+            if (JOptionPane.showConfirmDialog(tableDistanceTable, "Voulez vous vraiment supprimer le point d'ID " + tableDistanceTable.getValueAt(tableDistanceTable.getSelectedRow(), 0), "Suppression - Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                 int idToDelete = Integer.valueOf((String) tableDistanceTable.getValueAt(tableDistanceTable.getSelectedRow(), 0));
                 VoyageEucli ve = (VoyageEucli) voyage;
                 ve.getGraph().deletePoint(idToDelete);
@@ -287,7 +288,10 @@ public class MainWindow extends JFrame {
             buttonShowTravel.setEnabled(true);
             euclidianMap.setMap(newVoyage.getGraph());
             euclidianMap.setParcours(null);
+            parcoursGloutonEuclidien = null;
+            parcoursInsertionEuclidien = null;
             menuFileClose.setEnabled(true);
+            editModeToggleButton.setEnabled(true);
             showTravelToggleButtonActionPerformed();
             DistanceTableModel dtm = new DistanceTableModel(newVoyage.getGraph());
             tableDistanceTable.setModel(dtm);
