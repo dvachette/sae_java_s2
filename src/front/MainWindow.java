@@ -17,6 +17,7 @@ import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
@@ -58,7 +59,6 @@ import waypoints.WaypointRender;
  *
  * @author donat
  */
-
 public class MainWindow extends JFrame {
 
     private Parcours<PointEuclidien> parcoursInsertionEuclidien, parcoursGloutonEuclidien;
@@ -440,18 +440,12 @@ public class MainWindow extends JFrame {
                     } else {
                         voyage.exportToFile(filePathToSave, parcoursGloutonGeographique);
                     }
-                } 
+                }
             } catch (IOException exc) {
                 JOptionPane.showMessageDialog(rootPane, "Une erreur inatendue s'est produite", "Erreur - ouverture", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
-
-    
-
-    
-
-    
 
     private void menuFileCloseActionPerformed(ActionEvent evt) {
         this.voyage = null;
@@ -609,7 +603,7 @@ public class MainWindow extends JFrame {
             }
         }
     }
-    
+
     private void menuEvaluationButtonActionPerformed(ActionEvent evt) {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Sélectionner un dossier");
@@ -628,36 +622,41 @@ public class MainWindow extends JFrame {
             Parcours<PointGeographique> pig;
             Parcours<PointGeographique> pgg;
             File[] files = selectedDirectory.listFiles();
-            for (File f : files) {
-                vFacto = new VoyageFactory(f.getAbsolutePath());
-                try {
+            try {
+                FileWriter csvFile = new FileWriter("export/resultatsX_Y.csv");
+                for (File f : files) {
+                    vFacto = new VoyageFactory(f.getAbsolutePath());
+
                     v = vFacto.createVoyage();
                     if (v instanceof VoyageEucli ve) {
                         pie = ve.getGraph().parcoursInsertion();
                         pge = ve.getGraph().parcoursGlouton();
+
                         if (pie.getLength() < pge.getLength()) {
-                            ve.exportToFile("export/"+f.getName().replace("eval", "voyage"), pie);
+                            csvFile.write(f.getName() + ";" + pge.getLength() + ";" + pie.getLength() + ";" + pie.getLength() + "\n");
+                            ve.exportToFile("export/" + f.getName().replace("eval", "voyage"), pie);
                         } else {
-                            ve.exportToFile("export/"+f.getName().replace("eval", "voyage"), pge);
+                            csvFile.write(f.getName() + ";" + pge.getLength() + ";" + pie.getLength() + ";" + pge.getLength() + "\n");
+                            ve.exportToFile("export/" + f.getName().replace("eval", "voyage"), pge);
                         }
                     } else if (v instanceof VoyageGeo vg) {
                         pig = vg.getGraph().parcoursInsertion();
                         pgg = vg.getGraph().parcoursGlouton();
                         if (pig.getLength() < pgg.getLength()) {
-                            vg.exportToFile("export/"+f.getName().replace("eval", "voyage"), pig);
+                            csvFile.write(f.getName() + ";" + pgg.getLength() + ";" + pig.getLength() + ";" + pig.getLength()+ "\n");
+                            vg.exportToFile("export/" + f.getName().replace("eval", "voyage"), pig);
                         } else {
-                            vg.exportToFile("export/"+f.getName().replace("eval", "voyage"), pgg);
+                            csvFile.write(f.getName() + ";" + pgg.getLength() + ";" + pig.getLength() + ";" + pgg.getLength() + "\n");
+                            vg.exportToFile("export/" + f.getName().replace("eval", "voyage"), pgg);
                         }
                     }
-                } catch (Exception exc) {
-                    
                 }
-                
+                csvFile.close();
+            } catch (Exception exc) {
+
             }
         }
     }
-
-    
 
     private void initWaypoints() {
         WaypointPainter<CustomWaypoint> wp = new WaypointRender();
