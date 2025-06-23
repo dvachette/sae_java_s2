@@ -69,9 +69,7 @@ public class MainWindow extends JFrame {
     private JScrollPane scrollPaneDistanceTable;
     private Voyage voyage;
     private GMapEucli euclidianMap;
-    private boolean showTravel = false;
-
-    // Variables declaration - do not modify                     
+    private boolean showTravel = false;             
     private JToggleButton buttonShowTravel;
     private JComboBox<String> comboAlgorithmChoice;
     private JLabel labelTitleDistanceTable;
@@ -91,6 +89,7 @@ public class MainWindow extends JFrame {
 
     /**
      * Creates new form MainWindow
+     * @brief Constructeur et point de départ de l'application
      */
     public MainWindow() {
         this.setResizable(false);
@@ -689,7 +688,9 @@ public class MainWindow extends JFrame {
         jxMapViewer.setOverlayPainter(wp);
 
     }
-
+    /**
+     * @brief permet aux composants de mettre a jour le graphe et la table 
+     */
     public void updateGraph() {
         DistanceTableModel dtm = new DistanceTableModel(((VoyageEucli) voyage).getGraph());
         tableDistanceTable.setModel(dtm);

@@ -19,6 +19,12 @@ public class Parcours<T extends Point> {
     private double length;
     private ArrayList<T> path;
 
+    /**
+     * 
+     * @param length
+     * @param path 
+     * @brief Constructeur par défaut
+     */
     public Parcours(double length, ArrayList<T> path) {
         this.length = length;
         this.path = path;
@@ -28,7 +34,7 @@ public class Parcours<T extends Point> {
      * @author Ethan
      * @param g
      * @param start
-     * @return 
+     * @return Parcours glouton [AUSSI IMPLEMENTÉ DANS GRAPH]
      */
     public static Parcours parcoursGlouton( Graph g, Point start) {
         TreeMap<Integer, Point> points = g.getPoints();
@@ -51,7 +57,8 @@ public class Parcours<T extends Point> {
     /**
      * @author donat
      * @param g
-     * @return 
+     * @return Parcours
+     * @brief Renvoie un parcours aléatoire [AUSSI IMPLEMENTÉ DANS GRAPH]
      */
 
     public static Parcours parcoursAleatoire(Graph g) {
@@ -74,7 +81,8 @@ public class Parcours<T extends Point> {
      * @author Ethan
      * @param g
      * @param start
-     * @return 
+     * @return Parcours
+     * @brief parcours par insertion [AUSSI IMPLEMENTÉ DANS GRAPH]
      */
 
 
@@ -118,7 +126,8 @@ public class Parcours<T extends Point> {
      * @author Ethan
      * @param g
      * @param start
-     * @return 
+     * @return Parcours
+     * @brief meilleur parcours glouton, teste tous les départs [AUSSI IMPLEMENTÉ DANS GRAPH]
      */
 
     public static Parcours MeilleurGlouton(Graph<? extends Point> g, Point start) {
@@ -135,7 +144,8 @@ public class Parcours<T extends Point> {
     /**
      * @Author Ethan
      * @param g
-     * @return
+     * @return Parcours
+     * @brief meilleur parcours séléction, teste tous les départs [AUSSI IMPLEMENTÉ DANS GRAPH]
      */
 
     public static Parcours MeilleurInsertion(Graph<? extends Point> g, Point start) {
@@ -152,7 +162,8 @@ public class Parcours<T extends Point> {
     /**
         * @author Ethan 
         * @param g
-        * @return
+        * @return Parcours
+        * @brief renvoie le meilleur parcours entre le meilleur par insertion et par sélection
     */
 
     public static Parcours MeilleurAll(Graph<? extends Point> g){
@@ -167,11 +178,20 @@ public class Parcours<T extends Point> {
         return best;
     }
 
-
+    /**
+     * 
+     * @return double
+     * @brief renvoie la longueur du parcours
+     */
     public double getLength() {
         return length;
     }
-
+    
+    /**
+     * 
+     * @return ArrayList
+     * @brief Renvoie la liste des points ordonées dans l'ordre de parcours
+     */
     public ArrayList<T> getPath() {
         return path;
     }

@@ -5,6 +5,7 @@ import front.MainWindow;
 /**
  *
  * @author donat
+ * @brief Point de départ du code
  */
 public class SAE_G3S2E2 {
 

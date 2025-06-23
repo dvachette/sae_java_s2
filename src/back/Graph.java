@@ -14,7 +14,7 @@ import java.util.TreeMap;
 /**
  *
  * @author donat
- * @param <T>
+ * @param <T extends Point> Le type de point utilisé par le graphe
  *
  * @brief Classe représentant un graphe
  *
@@ -29,7 +29,7 @@ public class Graph<T extends Point> {
      * @brief Constructeur de base, génère un graphe vide
      */
     public Graph() {
-        this.points = new TreeMap<>();      
+        this.points = new TreeMap<>();
     }
 
     /**
@@ -40,7 +40,7 @@ public class Graph<T extends Point> {
     public TreeMap<Integer, T> getPoints() {
         return points;
     }
-    
+
     /**
      * @author donat
      *
@@ -57,14 +57,21 @@ public class Graph<T extends Point> {
      * @author donat
      *
      * @param id L'ID du point désiré
-     * @return Point (T)
+     * @return T (Point)
      */
     public T getPoint(int id) {
         return points.get(id);
     }
 
+    /**
+     *
+     * @param x_or_latitude
+     * @param y_or_longitude
+     * @return T (Point)
+     *
+     * @brief recupere un point par sa position, position exacte nécessaire
+     */
     public T getPoint(double x_or_latitude, double y_or_longitude) {
-        // I know this code is horible but i can't figure a better way...
         T ans = null;
         for (T point : points.values()) {
             if (point instanceof PointEuclidien) {
@@ -83,10 +90,21 @@ public class Graph<T extends Point> {
         return ans;
     }
 
+    /**
+     *
+     * @param p Le point a ajouter
+     *
+     * Ajoute un point au graphe
+     */
     public void addPoint(T p) {
         points.put(p.getId(), p);
     }
 
+    /**
+     *
+     * @param p Le point visé
+     * @return une map des distances aux autres points indexés par leurs IDs
+     */
     public TreeMap<Integer, Double> getDistances(T p) {
         TreeMap<Integer, Double> map = new TreeMap<>();
         for (int i : points.keySet()) {
@@ -95,10 +113,21 @@ public class Graph<T extends Point> {
         return map;
     }
 
+    /**
+     *
+     * @param id l'ID du point visé
+     * @return une map des distances aux autres points indexés par leurs IDs
+     */
     public TreeMap<Integer, Double> getDistances(int id) {
         return this.getDistances(this.getPoint(id));
     }
 
+    /**
+     *
+     * @return Une map de map de distances
+     * @brief Renvoie une structure contenant toutes les distances entre les
+     * points
+     */
     public TreeMap<Integer, TreeMap<Integer, Double>> getDistancesTable() {
         TreeMap<Integer, TreeMap<Integer, Double>> map = new TreeMap<>();
         for (int i : points.keySet()) {
@@ -117,6 +146,17 @@ public class Graph<T extends Point> {
         return map;
     }
 
+    /**
+     *
+     * @param count
+     * @param minX
+     * @param maxX
+     * @param minY
+     * @param maxY
+     * @return Graph
+     *
+     * @brief génère un graphe de count points aléatoirement placés
+     */
     public static Graph<PointEuclidien> randomPointSet(int count, double minX, double maxX, double minY, double maxY) {
         Graph<PointEuclidien> graph = new Graph<>();
         Random rng = new Random();
@@ -126,14 +166,31 @@ public class Graph<T extends Point> {
         return graph;
     }
 
+    /**
+     *
+     * @param count
+     * @return Génère un graphe de count points aléatoirement placés, avec des
+     * bornes par défaut
+     */
     public static Graph<PointEuclidien> randomPointSet(int count) {
         return Graph.randomPointSet(count, 0, 100, 0, 100);
     }
 
+    /**
+     *
+     * @return int
+     * @brief renvoie le plus grand ID, pour permettre de générer un ID unique
+     * par d'autres fonctions
+     */
     public int maxIdValue() {
         return Collections.max(points.keySet());
     }
 
+    /**
+     *
+     * @return Parcours Renvoie le meilleur parcours glouton (teste sur chaque
+     * point de départ)
+     */
     public Parcours<T> parcoursGlouton() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         T start = pool.remove(0);
@@ -151,6 +208,14 @@ public class Graph<T extends Point> {
         return shortest;
     }
 
+    /**
+     *
+     * @param start
+     * @param pool
+     * @return Parcours
+     * @brief Renvoir un parcours glouton partant de start et passant par tous
+     * les points de pool
+     */
     public Parcours<T> parcoursGlouton(T start, ArrayList<T> pool) {
         ArrayList<T> path = new ArrayList<>();
 
@@ -170,6 +235,11 @@ public class Graph<T extends Point> {
         return new Parcours<>(length, path);
     }
 
+    /**
+     *
+     * @return Parcours
+     * @brief renvoie un parcours aléatoire
+     */
     public Parcours<T> parcoursAleatoire() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         Random rng = new Random();
@@ -187,6 +257,12 @@ public class Graph<T extends Point> {
         return new Parcours(length, path);
     }
 
+    /**
+     *
+     * @return Parcours
+     * @brief Renvoie le meilleur parcour par insertion (teste sur tous les
+     * départs)
+     */
     public Parcours<T> parcoursInsertion() {
         ArrayList<T> pool = new ArrayList<>(points.values());
         T start = pool.remove(0);
@@ -203,62 +279,75 @@ public class Graph<T extends Point> {
         }
         return shortest;
     }
+
     /**
-     * @author ChatGPT 4o, Donatien VACHETTE
+     * @author Donatien VACHETTE, optimisé par chatGPT 4o
      * @param start
      * @param pool
-     * @return 
+     * @return Parcours
+     * @brief Renvoir un le parcours par insertion partant de start, et passant
+     * par tous les points de pool
      */
     public Parcours<T> parcoursInsertion(T start, ArrayList<T> pool) {
-    // 1. Tri des points selon leur ID (ordre imposé)
-    pool.sort(Comparator.comparingInt(T::getId));
+        // 1. Tri des points selon leur ID (ordre imposé)
+        pool.sort(Comparator.comparingInt(T::getId));
 
-    ArrayList<T> path = new ArrayList<>();
-    path.add(start);
+        ArrayList<T> path = new ArrayList<>();
+        path.add(start);
 
-    // 2. Ajouter le point le plus proche du départ
-    T closestToStart = (T) start.closest(pool);
-    pool.remove(closestToStart);
-    path.add(closestToStart);
+        // 2. Ajouter le point le plus proche du départ
+        T closestToStart = (T) start.closest(pool);
+        pool.remove(closestToStart);
+        path.add(closestToStart);
 
-    double totalDistance = start.distanceOf(closestToStart);
+        double totalDistance = start.distanceOf(closestToStart);
 
-    // 3. Pour chaque point, insérer à l’endroit minimisant l’allongement du parcours
-    for (T point : pool) {
-        int bestInsertIndex = 1;
-        double bestDelta = Double.MAX_VALUE;
+        // 3. Pour chaque point, insérer à l’endroit minimisant l’allongement du parcours
+        for (T point : pool) {
+            int bestInsertIndex = 1;
+            double bestDelta = Double.MAX_VALUE;
 
-        for (int i = 1; i < path.size(); i++) {
-            T prev = path.get(i - 1);
-            T next = path.get(i);
-            double delta = prev.distanceOf(point) + point.distanceOf(next) - prev.distanceOf(next);
+            for (int i = 1; i < path.size(); i++) {
+                T prev = path.get(i - 1);
+                T next = path.get(i);
+                double delta = prev.distanceOf(point) + point.distanceOf(next) - prev.distanceOf(next);
 
-            if (delta < bestDelta) {
-                bestDelta = delta;
-                bestInsertIndex = i;
+                if (delta < bestDelta) {
+                    bestDelta = delta;
+                    bestInsertIndex = i;
+                }
             }
+
+            // Tester aussi insertion en fin
+            T last = path.get(path.size() - 1);
+            double deltaEnd = last.distanceOf(point);
+
+            if (deltaEnd < bestDelta) {
+                bestDelta = deltaEnd;
+                bestInsertIndex = path.size();
+            }
+
+            path.add(bestInsertIndex, point);
+            totalDistance += bestDelta;
         }
 
-        // Tester aussi insertion en fin
-        T last = path.get(path.size() - 1);
-        double deltaEnd = last.distanceOf(point);
-
-        if (deltaEnd < bestDelta) {
-            bestDelta = deltaEnd;
-            bestInsertIndex = path.size();
-        }
-
-        path.add(bestInsertIndex, point);
-        totalDistance += bestDelta;
+        return new Parcours<>(totalDistance, path);
     }
 
-    return new Parcours<>(totalDistance, path);
-}
+    /**
+     * 
+     * @return String
+     * @brief Representation en chaine de caractères
+     */
     @Override
     public String toString() {
         return "Graph{" + "points=" + points + '}';
     }
-    
+    /**
+     * 
+     * @param id 
+     * @brief Retire un point du graphe
+     */
     public void deletePoint(int id) {
         this.points.remove(id);
     }

@@ -14,21 +14,31 @@ import javax.swing.table.TableColumnModel;
 /**
  *
  * @author donat
+ * @brief Classe utilisée pour afficher les distances entre les points
  */
 public class DistanceTable extends JScrollPane {
 
     private DistanceTableModel model;
     private JTable dt;
 
+    /**
+     * @brief Constructeur
+     */
     public DistanceTable() {
         super();
         initComponent();
     }
 
+    /**
+     * 
+     * @return Dimension
+     * @brief Fixer la taille à 400x400
+     */
     @Override
     public Dimension getPreferredSize() {
         return new Dimension(400, 400);
     }
+
 
     private void initComponent() {
 
@@ -36,7 +46,12 @@ public class DistanceTable extends JScrollPane {
         this.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         this.revalidate();
     }
-
+    
+    /**
+     * 
+     * @param g 
+     * @brief initialise le graphe a représenter
+     */
     public void setGraph(Graph<? extends Point> g) {
         model = new DistanceTableModel(g);
 

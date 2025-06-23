@@ -215,13 +215,22 @@ public class AskForCreatingRandomPointSet extends javax.swing.JDialog {
         yMinSpinner.setValue(Math.min((int) yMaxSpinner.getValue(), (int) yMinSpinner.getValue()));
 
     }//GEN-LAST:event_yMaxSpinnerStateChanged
-
+    /**
+     *
+     * @return boolean
+     * @brief renvoie true si le bouton OK a été cliqué
+     */
     public boolean OK() {
         return this.OK;
     }
 
+    /**
+     * @return Graph
+     * @brief Génère et renvoie un graphe avec les valeurs spécifiés dans la
+     * fenetre
+     */
     public Graph<PointEuclidien> getGeneratedGraph() {
-        return Graph.randomPointSet((int) nbPointSpinner.getValue(), 
+        return Graph.randomPointSet((int) nbPointSpinner.getValue(),
                 ((Number) xMinSpinner.getValue()).doubleValue(),
                 ((Number) xMaxSpinner.getValue()).doubleValue(),
                 ((Number) yMinSpinner.getValue()).doubleValue(),

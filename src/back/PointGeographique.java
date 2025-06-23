@@ -15,41 +15,82 @@ public class PointGeographique implements Point {
     private int id;
     private double latitude, longitude;
 
+    /**
+     * 
+     * @param latitude
+     * @param longitude
+     * @param id 
+     * @brief Constructeur du point
+     */
     public PointGeographique(double latitude, double longitude, int id) {
         this.id = id;
         this.latitude = latitude;
         this.longitude = longitude;
     }
 
+    /**
+     * 
+     * @return int
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * 
+     * @param id 
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * 
+     * @return double
+     */
     public double getLatitude() {
         return latitude;
     }
 
+    /**
+     * 
+     * @param latitude 
+     */
     public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
+    /**
+     * 
+     * @return double
+     */
     public double getLongitude() {
         return longitude;
     }
 
+    /**
+     * 
+     * @param longitude 
+     */
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
+    /**
+     * 
+     * @return String
+     */
     @Override
     public String toString() {
         return "PointGeographique{" + "id=" + id + ", latitude=" + latitude + ", longitude=" + longitude + '}';
     }
 
+    /**
+     * 
+     * @param p Autre point géographique
+     * @return double
+     * @brief calcule la distance entre deux points sur la Terre, en tennant compte de sa courbure
+     */
     @Override
     public double distanceOf(Point p) {
         if (!(p instanceof PointGeographique)) {
@@ -81,6 +122,12 @@ public class PointGeographique implements Point {
         return Math.PI * valDec/180;
     }
     
+    /**
+     * 
+     * @param points Liste de points Géographiques
+     * @return PointGeographique
+     * @brief renvoie le point le plus proche dans la liste
+     */
         @Override
     public Point closest(ArrayList<? extends Point> points) {
         double miniDist = this.distanceOf(points.getFirst());
