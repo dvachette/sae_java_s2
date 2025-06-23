@@ -170,18 +170,15 @@ public class Graph<T extends Point> {
     }
 
     public Parcours<T> parcoursAleatoire() {
-        System.out.println("CALLING OF PARCOURS ALEATOIRE");
         ArrayList<T> pool = new ArrayList<>(points.values());
         Random rng = new Random();
         ArrayList<T> path = new ArrayList<>();
         int size = pool.size();
-        System.out.println("pool : ");
-        System.out.println(pool);
+
         for (int i = size; i > 0; i--) {
             path.add(pool.remove(rng.nextInt(0, i)));
         }
-        System.out.println("path : ");
-        System.out.println(path);
+
         double length = path.getLast().distanceOf(path.getFirst());
         for (int i = 0; i < size - 1; i++) {
             length += path.get(i).distanceOf(path.get(i + 1));
@@ -198,7 +195,6 @@ public class Graph<T extends Point> {
         for (int i = 1; i < size; i++) {
             pool = new ArrayList<>(points.values());
             start = pool.remove(i);
-            System.out.println("Testing from start point (out of "+ Integer.toString(size) + ") : " + Integer.toString(i));
             current = parcoursInsertion(start, pool);
             if (current.getLength() < shortest.getLength()) {
                 shortest = current;

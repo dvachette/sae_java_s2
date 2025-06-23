@@ -11,13 +11,13 @@ import back.Voyage;
 import back.VoyageEucli;
 import back.VoyageFactory;
 import back.VoyageGeo;
-import front.DistanceTableModel;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Objects;
 import javax.swing.DefaultComboBoxModel;
@@ -58,6 +58,7 @@ import waypoints.WaypointRender;
  *
  * @author donat
  */
+
 public class MainWindow extends JFrame {
 
     private Parcours<PointEuclidien> parcoursInsertionEuclidien, parcoursGloutonEuclidien;
@@ -177,8 +178,7 @@ public class MainWindow extends JFrame {
             menuFileCloseActionPerformed(evt);
         });
         menuFileClose.setEnabled(false);
-        
-        
+
         menuFile.add(menuFileClose);
         menuFile.add(jSeparator3);
 
@@ -207,6 +207,9 @@ public class MainWindow extends JFrame {
         menuEvaluation.setText("Evaluation");
 
         selectFolderMenuItem.setText("Selectionner un dossier");
+        selectFolderMenuItem.addActionListener((ActionEvent evt) -> {
+            menuEvaluationButtonActionPerformed(evt);
+        });
         menuEvaluation.add(selectFolderMenuItem);
 
         menuBar.add(menuEvaluation);
@@ -323,7 +326,7 @@ public class MainWindow extends JFrame {
                 } else if (voyage instanceof VoyageGeo voyageGeo) {
                     euclidianMap.setVisible(false);
                     jxMapViewer.setVisible(true);
-                    
+
                     parcoursGloutonGeographique = null;
                     parcoursInsertionGeographique = null;
                     clearWaypoints();
@@ -404,8 +407,51 @@ public class MainWindow extends JFrame {
     }
 
     private void menuFileExportActionPerformed(ActionEvent evt) {
-        // TODO add your handling code here:
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setDialogTitle("Enregistrer sous");
+
+        int userSelection = fileChooser.showSaveDialog(null); // null = centré
+
+        if (userSelection == JFileChooser.APPROVE_OPTION) {
+
+            try {
+                String filePathToSave = fileChooser.getSelectedFile().getAbsolutePath();
+                if (voyage instanceof VoyageEucli voyageEucli) {
+                    if (Objects.equals(parcoursGloutonEuclidien, null)) {
+                        parcoursGloutonEuclidien = voyageEucli.getGraph().parcoursGlouton();
+                    }
+                    if (Objects.equals(parcoursInsertionEuclidien, null)) {
+                        parcoursInsertionEuclidien = voyageEucli.getGraph().parcoursInsertion();
+                    }
+                    if (parcoursInsertionEuclidien.getLength() < parcoursGloutonEuclidien.getLength()) {
+                        voyage.exportToFile(filePathToSave, parcoursInsertionEuclidien);
+                    } else {
+                        voyage.exportToFile(filePathToSave, parcoursGloutonEuclidien);
+                    }
+                } else if (voyage instanceof VoyageGeo voyageGeo) {
+                    if (Objects.equals(parcoursGloutonGeographique, null)) {
+                        parcoursGloutonGeographique = voyageGeo.getGraph().parcoursGlouton();
+                    }
+                    if (Objects.equals(parcoursInsertionGeographique, null)) {
+                        parcoursInsertionGeographique = voyageGeo.getGraph().parcoursInsertion();
+                    }
+                    if (parcoursInsertionGeographique.getLength() < parcoursGloutonGeographique.getLength()) {
+                        voyage.exportToFile(filePathToSave, parcoursInsertionGeographique);
+                    } else {
+                        voyage.exportToFile(filePathToSave, parcoursGloutonGeographique);
+                    }
+                } 
+            } catch (IOException exc) {
+                JOptionPane.showMessageDialog(rootPane, "Une erreur inatendue s'est produite", "Erreur - ouverture", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
+
+    
+
+    
+
+    
 
     private void menuFileCloseActionPerformed(ActionEvent evt) {
         this.voyage = null;
@@ -562,8 +608,56 @@ public class MainWindow extends JFrame {
                 jxMapViewer.repaint();
             }
         }
-
     }
+    
+    private void menuEvaluationButtonActionPerformed(ActionEvent evt) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Sélectionner un dossier");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false); // désactive "Tous les fichiers"
+
+        int result = chooser.showOpenDialog(null);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedDirectory = chooser.getSelectedFile();
+            System.out.println("Dossier sélectionné : " + selectedDirectory.getAbsolutePath());
+            VoyageFactory vFacto;
+            Voyage v;
+            Parcours<PointEuclidien> pie;
+            Parcours<PointEuclidien> pge;
+            Parcours<PointGeographique> pig;
+            Parcours<PointGeographique> pgg;
+            File[] files = selectedDirectory.listFiles();
+            for (File f : files) {
+                vFacto = new VoyageFactory(f.getAbsolutePath());
+                try {
+                    v = vFacto.createVoyage();
+                    if (v instanceof VoyageEucli ve) {
+                        pie = ve.getGraph().parcoursInsertion();
+                        pge = ve.getGraph().parcoursGlouton();
+                        if (pie.getLength() < pge.getLength()) {
+                            ve.exportToFile("export/"+f.getName().replace("eval", "voyage"), pie);
+                        } else {
+                            ve.exportToFile("export/"+f.getName().replace("eval", "voyage"), pge);
+                        }
+                    } else if (v instanceof VoyageGeo vg) {
+                        pig = vg.getGraph().parcoursInsertion();
+                        pgg = vg.getGraph().parcoursGlouton();
+                        if (pig.getLength() < pgg.getLength()) {
+                            vg.exportToFile("export/"+f.getName().replace("eval", "voyage"), pig);
+                        } else {
+                            vg.exportToFile("export/"+f.getName().replace("eval", "voyage"), pgg);
+                        }
+                    }
+                } catch (Exception exc) {
+                    
+                }
+                
+            }
+        }
+    }
+
+    
 
     private void initWaypoints() {
         WaypointPainter<CustomWaypoint> wp = new WaypointRender();
