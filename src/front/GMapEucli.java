@@ -27,7 +27,7 @@ import javax.swing.JOptionPane;
  * @author anqna
  */
 public class GMapEucli extends JComponent implements MouseListener{
-
+    private MainWindow root;
     private ArrayList<PointEuclidien> listePoints;
     private ArrayList<PointEuclidien> listePointsConvertis;
     private int idMax;
@@ -38,13 +38,15 @@ public class GMapEucli extends JComponent implements MouseListener{
     private int margeY;
     private double etendue;
     private Parcours<PointEuclidien> parcours;
-    private boolean edit_mode = true;
-
+    private boolean edit_mode = false;
+    private Graph<PointEuclidien> graph = null;
+    
     //graph.getPoints() -> tree map de integer et t extends point
     //new ArrayList<Point>(graph.getPoints().values());
     // convertir point en point euclidien if (pt instanceof PointEuclidien)
-    public GMapEucli() {
+    public GMapEucli(MainWindow parent) {
         super();
+        this.root = parent;
         this.requestFocus();
         this.setPreferredSize(new Dimension(900 + margeInit, 600 + margeInit));
         this.setMinimumSize(new Dimension(900 + margeInit, 600 + margeInit));
@@ -62,9 +64,11 @@ public class GMapEucli extends JComponent implements MouseListener{
     public void setMap(Graph<? extends Point> gr) {
         if (Objects.equals(gr, null)) {
             this.listePoints = null;
+            this.graph = null;
             this.repaint();
             return;
         }
+        this.graph = (Graph<PointEuclidien>) gr;
         idMax = gr.maxIdValue();
         ArrayList listeTemp = new ArrayList(gr.getPoints().values());
         this.listePoints = new ArrayList();
@@ -303,7 +307,6 @@ public class GMapEucli extends JComponent implements MouseListener{
         if(edit_mode && !Objects.equals(this.listePoints, null)){
             int clicX = e.getX();
             int clicY = e.getY();
-            System.out.println("click at "+ clicX + " : " + clicY);
             if((clicX<(this.getPreferredSize().width-(margeInit/2)+10)) && (clicX>((margeInit * 1.5) - 10))){
                 if((clicY<(this.getPreferredSize().height-((margeInit * 1.5) - 10))) && (clicY > ((margeInit/2)-10))){
                     double clicConvertX = clicX - margeX;
@@ -312,12 +315,15 @@ public class GMapEucli extends JComponent implements MouseListener{
                     double clicConvertY = clicY - this.getPreferredSize().height + margeY;
                     clicConvertY = clicConvertY / scaleY[0];
                     clicConvertY = scaleY[1] - clicConvertY;
-                    String message = "Voulez-vous ajouter ce point ?/nCoordonnées : x = "+clicConvertX+"    y = "+clicConvertY;
+                    String message = "Voulez-vous ajouter ce point ?\nCoordonnées : x = " + clicConvertX + "    y = "+clicConvertY;
                     int reponse = JOptionPane.showConfirmDialog((Component)(this),message,"Confirmation d'ajout de Point",JOptionPane.OK_CANCEL_OPTION);
                     if(reponse == JOptionPane.OK_OPTION){
-                        listePoints.add(new PointEuclidien(clicConvertX, clicConvertY, idMax+1));
+                        PointEuclidien newPoint = new PointEuclidien(clicConvertX, clicConvertY, idMax+1);
+                        graph.addPoint(newPoint);
+                        listePoints.add(newPoint);
                         idMax++;
                         listePointsConvertis.add(new PointEuclidien(clicX, clicY, idMax));
+                        root.updateGraph();
                         this.repaint();
                     }
                 }

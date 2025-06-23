@@ -47,7 +47,6 @@ public class DistanceTable extends JScrollPane {
         for (int i = 0; i < columnModel.getColumnCount(); i++) {
             columnModel.getColumn(i).setMinWidth(30);
         }
-        System.out.println("graph set");
         dt.setColumnModel(columnModel);
         dt.setModel(model);
         add(dt);

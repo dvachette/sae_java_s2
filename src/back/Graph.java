@@ -4,6 +4,7 @@
  */
 package back;
 
+import front.DistanceTableModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -28,7 +29,7 @@ public class Graph<T extends Point> {
      * @brief Constructeur de base, génère un graphe vide
      */
     public Graph() {
-        this.points = new TreeMap<>();
+        this.points = new TreeMap<>();      
     }
 
     /**
@@ -39,7 +40,7 @@ public class Graph<T extends Point> {
     public TreeMap<Integer, T> getPoints() {
         return points;
     }
-
+    
     /**
      * @author donat
      *
