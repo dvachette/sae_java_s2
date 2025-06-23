@@ -21,10 +21,9 @@ import java.util.Objects;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 
-//modifier pour pouvoir mettre les numeros id et la nombres de mesure du repère
 /**
- *
- * @author anqna
+ * classe composant graphique qui gère l'affichage des points euclidiens à partir d'un graphe de points
+ * @author Nathalie
  */
 public class GMapEucli extends JComponent implements MouseListener{
     private MainWindow root;
@@ -41,9 +40,10 @@ public class GMapEucli extends JComponent implements MouseListener{
     private boolean edit_mode = false;
     private Graph<PointEuclidien> graph = null;
     
-    //graph.getPoints() -> tree map de integer et t extends point
-    //new ArrayList<Point>(graph.getPoints().values());
-    // convertir point en point euclidien if (pt instanceof PointEuclidien)
+    /**
+     * Initialise une carte sans aucun point
+     * @param parent 
+     */
     public GMapEucli(MainWindow parent) {
         super();
         this.root = parent;
@@ -53,14 +53,26 @@ public class GMapEucli extends JComponent implements MouseListener{
         this.addMouseListener(this);
     }
 
+    /**
+     * Renvoie true si la carte est en mode édition, false sinon
+     * @return boolean
+     */
     public boolean isEdit_mode() {
         return edit_mode;
     }
 
+    /**
+     * Permet de modifier la valeur du mode d'édition, en la plaçant paramètre
+     * @param edit_mode boolean
+     */
     public void setEdit_mode(boolean edit_mode) {
         this.edit_mode = edit_mode;
     }
 
+    /**
+     * Configure la map pour ajouter tous les points d'un graphe gr placé en paramètre et affiche la carte une fois configurée
+     * @param gr Graph de points
+     */
     public void setMap(Graph<? extends Point> gr) {
         if (Objects.equals(gr, null)) {
             this.listePoints = null;
@@ -147,10 +159,6 @@ public class GMapEucli extends JComponent implements MouseListener{
 
     }
 
-    /**
-     * remplit la listePointsConvertis avec des points représentant les
-     * différents points de listePoints mais mis à l'échelle de la carte
-     */
     private void miseEnEchelle() {
         listePointsConvertis.clear();
         int i;
@@ -168,6 +176,10 @@ public class GMapEucli extends JComponent implements MouseListener{
         }
     }
 
+    /**
+     * Trace le composant vide, les axes, les points et la graduations s'il y a des points
+     * @param gr 
+     */
     @Override
     protected void paintComponent(Graphics gr) {
         Graphics2D g = (Graphics2D) (gr);
@@ -245,6 +257,10 @@ public class GMapEucli extends JComponent implements MouseListener{
         }
     }
 
+    /**
+     * Trâce les points et leurs identifiants dans le cadre de la carte
+     * @param gr 
+     */
     protected void paintPoints(Graphics gr) {
         Graphics2D g = (Graphics2D) (gr);
         g.setColor(Color.black);
@@ -264,6 +280,10 @@ public class GMapEucli extends JComponent implements MouseListener{
 
     }
 
+    /**
+     * Trace le parcours stocké dans l'attribut parcours
+     * @param gr 
+     */
     public void paintParcours(Graphics gr) {
         Graphics2D g = (Graphics2D) (gr);
 
@@ -279,6 +299,12 @@ public class GMapEucli extends JComponent implements MouseListener{
 
     }
 
+    /**
+     * Trace une ligne reliant deux points dont les identifiants sont les deux int idStart et idEnd placés en paramètre
+     * @param gr Graphics
+     * @param idStart int
+     * @param idEnd int
+     */
     public void paintDistance2(Graphics gr, int idStart, int idEnd) {
         PointEuclidien pStart = null;
         PointEuclidien pEnd = null;
@@ -294,14 +320,26 @@ public class GMapEucli extends JComponent implements MouseListener{
         gr.drawLine((int) pStart.getX(), (int) pStart.getY(), (int) pEnd.getX(), (int) pEnd.getY());
     }
 
+    /**
+     * Renvoie le parcours stockés dans l'attribut parcours
+     * @return parcours
+     */
     public Parcours<PointEuclidien> getParcours() {
         return parcours;
     }
 
+    /**
+     * Permet de modifier l'attribut parcours en le remplaçant par le parcours placé en paramètre
+     * @param parcours parcours
+     */
     public void setParcours(Parcours<PointEuclidien> parcours) {
         this.parcours = parcours;
     }
 
+    /**
+     * Gère l'écoute des clics de souris, ajoute un point au graph et l'affiche lorsque le clic est à l'intérieur du cadre de la carte et que le mode édition est activé
+     * @param e MouseEvent
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         if(edit_mode && !Objects.equals(this.listePoints, null)){
@@ -331,18 +369,34 @@ public class GMapEucli extends JComponent implements MouseListener{
         }
     }
 
+    /**
+     * méthode vide implémentée avec l'écouteur de la souris
+     * @param e 
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         }
 
+    /**
+     * méthode vide implémentée avec l'écouteur de la souris
+     * @param e 
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         }
 
+    /**
+     * méthode vide implémentée avec l'écouteur de la souris
+     * @param e 
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
         }
 
+    /**
+     * méthode vide implémentée avec l'écouteur de la souris
+     * @param e 
+     */
     @Override
     public void mouseExited(MouseEvent e) {
         }
