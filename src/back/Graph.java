@@ -258,5 +258,8 @@ public class Graph<T extends Point> {
     public String toString() {
         return "Graph{" + "points=" + points + '}';
     }
-
+    
+    public void deletePoint(int id) {
+        this.points.remove(id);
+    }
 }

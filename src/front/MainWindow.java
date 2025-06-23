@@ -40,6 +40,7 @@ import javax.swing.JToggleButton;
 import javax.swing.LayoutStyle;
 import javax.swing.SwingWorker;
 import javax.swing.WindowConstants;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.MouseInputListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -121,6 +122,9 @@ public class MainWindow extends JFrame {
     private void initComponents() {
         euclidianMap = new GMapEucli(this);
         tableDistanceTable = new JTable();
+        tableDistanceTable.getSelectionModel().addListSelectionListener((ListSelectionEvent e) -> {
+            tableDistanceTableOnClick(e);
+        });
         jxMapViewer = new JXMapViewer();
         jxMapViewer.setPreferredSize(euclidianMap.getPreferredSize());
         jxMapViewer.setVisible(false);
@@ -164,6 +168,8 @@ public class MainWindow extends JFrame {
         editModeToggleButton.addActionListener((java.awt.event.ActionEvent evt) -> {
             editModeToggleButtonActionPerformed(evt);
         });
+        editModeToggleButton.setEnabled(false);
+        editModeToggleButton.setSelected(false);
 
         menuFile.setText("Fichier");
 
@@ -257,6 +263,18 @@ public class MainWindow extends JFrame {
         pack();
     }
 
+    private void tableDistanceTableOnClick(ListSelectionEvent e) {
+        if (voyage instanceof VoyageEucli && euclidianMap.isEdit_mode() && tableDistanceTable.getSelectedRow() > 0) {
+            if (JOptionPane.showConfirmDialog(tableDistanceTable, "Voulez vous vraiment supprimer ce point ?", "Suppression - Confirmation", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                int idToDelete = Integer.valueOf((String) tableDistanceTable.getValueAt(tableDistanceTable.getSelectedRow(), 0));
+                VoyageEucli ve = (VoyageEucli) voyage;
+                ve.getGraph().deletePoint(idToDelete);
+                euclidianMap.setMap(ve.getGraph());
+                updateGraph();
+            }
+        }
+    }
+
     private void menuFileGenerateRandomPointSetActionPerformed(ActionEvent evt) {
         AskForCreatingRandomPointSet popup = new AskForCreatingRandomPointSet(this);
         popup.setVisible(true);
@@ -329,7 +347,9 @@ public class MainWindow extends JFrame {
                 } else if (voyage instanceof VoyageGeo voyageGeo) {
                     euclidianMap.setVisible(false);
                     jxMapViewer.setVisible(true);
-
+                    editModeToggleButton.setEnabled(false);
+                    editModeToggleButton.setSelected(false);
+                    euclidianMap.setEdit_mode(false);
                     parcoursGloutonGeographique = null;
                     parcoursInsertionGeographique = null;
                     clearWaypoints();
