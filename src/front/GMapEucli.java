@@ -10,22 +10,27 @@ import back.Point;
 import back.PointEuclidien;
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Objects;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 
 //modifier pour pouvoir mettre les numeros id et la nombres de mesure du repère
 /**
  *
  * @author anqna
  */
-public class GMapEucli extends JComponent {
+public class GMapEucli extends JComponent implements MouseListener{
 
     private ArrayList<PointEuclidien> listePoints;
     private ArrayList<PointEuclidien> listePointsConvertis;
+    private int idMax;
     private double[] scaleX; //[a,b] qui permet de mettre à l'échelle X avec (X -b)*a + marges
     private double[] scaleY; //idem avec y
     private final int margeInit = 50;
@@ -33,6 +38,7 @@ public class GMapEucli extends JComponent {
     private int margeY;
     private double etendue;
     private Parcours<PointEuclidien> parcours;
+    private boolean edit_mode = false;
 
     //graph.getPoints() -> tree map de integer et t extends point
     //new ArrayList<Point>(graph.getPoints().values());
@@ -44,12 +50,21 @@ public class GMapEucli extends JComponent {
         this.setMinimumSize(new Dimension(900 + margeInit, 600 + margeInit));
     }
 
+    public boolean isEdit_mode() {
+        return edit_mode;
+    }
+
+    public void setEdit_mode(boolean edit_mode) {
+        this.edit_mode = edit_mode;
+    }
+
     public void setMap(Graph<? extends Point> gr) {
         if (Objects.equals(gr, null)) {
             this.listePoints = null;
             this.repaint();
             return;
         }
+        idMax = gr.maxIdValue();
         ArrayList listeTemp = new ArrayList(gr.getPoints().values());
         this.listePoints = new ArrayList();
         for (int i = 0; i < listeTemp.size(); i++) {
@@ -281,5 +296,47 @@ public class GMapEucli extends JComponent {
     public void setParcours(Parcours<PointEuclidien> parcours) {
         this.parcours = parcours;
     }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if(edit_mode){
+            int clicX = e.getX();
+            int clicY = e.getY();
+            if((clicX<(this.getPreferredSize().width-(margeInit/2)+10)) && (clicX>((margeInit * 1.5) - 10))){
+                if((clicY<(this.getPreferredSize().height-((margeInit * 1.5) - 10))) && (clicY > ((margeInit/2)-10))){
+                    double clicConvertX = clicX - margeX;
+                    clicConvertX = clicConvertX / scaleY[0];
+                    clicConvertX = clicConvertX + scaleY[1];
+                    double clicConvertY = clicY - this.getPreferredSize().height + margeY;
+                    clicConvertY = clicConvertY / scaleY[0];
+                    clicConvertY = scaleY[1] - clicConvertY;
+                    String message = "Voulez-vous ajouter ce point ?/nCoordonnées : x = "+clicConvertX+"    y = "+clicConvertY;
+                    int reponse = JOptionPane.showConfirmDialog((Component)(this),message,"Confirmation d'ajout de Point",JOptionPane.OK_CANCEL_OPTION);
+                    if(reponse == JOptionPane.OK_OPTION){
+                        listePoints.add(new PointEuclidien(clicConvertX, clicConvertY, idMax+1));
+                        idMax++;
+                        listePointsConvertis.add(new PointEuclidien(clicX, clicY, idMax));
+                        this.repaint();
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        }
 
 }
