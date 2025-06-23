@@ -38,7 +38,7 @@ public class GMapEucli extends JComponent implements MouseListener{
     private int margeY;
     private double etendue;
     private Parcours<PointEuclidien> parcours;
-    private boolean edit_mode = false;
+    private boolean edit_mode = true;
 
     //graph.getPoints() -> tree map de integer et t extends point
     //new ArrayList<Point>(graph.getPoints().values());
@@ -48,6 +48,7 @@ public class GMapEucli extends JComponent implements MouseListener{
         this.requestFocus();
         this.setPreferredSize(new Dimension(900 + margeInit, 600 + margeInit));
         this.setMinimumSize(new Dimension(900 + margeInit, 600 + margeInit));
+        this.addMouseListener(this);
     }
 
     public boolean isEdit_mode() {
@@ -299,9 +300,10 @@ public class GMapEucli extends JComponent implements MouseListener{
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if(edit_mode){
+        if(edit_mode && !Objects.equals(this.listePoints, null)){
             int clicX = e.getX();
             int clicY = e.getY();
+            System.out.println("click at "+ clicX + " : " + clicY);
             if((clicX<(this.getPreferredSize().width-(margeInit/2)+10)) && (clicX>((margeInit * 1.5) - 10))){
                 if((clicY<(this.getPreferredSize().height-((margeInit * 1.5) - 10))) && (clicY > ((margeInit/2)-10))){
                     double clicConvertX = clicX - margeX;
