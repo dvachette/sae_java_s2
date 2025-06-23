@@ -23,7 +23,7 @@ import javax.swing.JOptionPane;
 
 /**
  * classe composant graphique qui gère l'affichage des points euclidiens à partir d'un graphe de points
- * @author anqna
+ * @author Nathalie
  */
 public class GMapEucli extends JComponent implements MouseListener{
     private MainWindow root;
